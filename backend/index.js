@@ -44,7 +44,7 @@ app.post("/login", async (req,res)=>{
         return res.status(500).json({message: "database not connected"});
     }
     try{
-        const codiceISA = req.body.isa; // prende il codice isa dal body della richiesta
+        const codiceISA = parseInt(req.body.isa); // prende il codice isa dal body della richiesta
         const password = req.body.password; // prende la password dal body della richiesta
 
         if(!codiceISA){return res.status(400).json({message: "codice ISA non fornito"});}

@@ -35,14 +35,53 @@ ritorna i libri in basa a nessuno, uno o più filtri
 - /books?status=Scienze pure --> filtra i dati in base alla status (es. disponibile, non disponibile, solo consultazione...)
 
 ### /addBook
-*work in progress* permette all'admin di aggiungere un libro specifio, i parametri necessari sono l'id (che rappresenta il codice d'inventario) la collocazione, l'autore, la lingua e il titolo
+metodo: post
+permette all'admin di aggiungere un libro specifio, i parametri obbligatori sono l'id la collocazione, l'autore, la lingua e il titolo.
+I parametri facoltativi possono non essere messi, quelli obbligatori no.
+ il body della richiesta sarà così formato:
+```json 
+{
+  "_id": 5, // obbligatorio, rappresenta il codice di inventario, sarà l'admin a passarlo direttamente al server (l'id non verrò generato da mongodb)
+  "CDD": "371.9 BUR", // facoltativo
+  "collocazione": "letteratura italiana", // obbligatorio
+  "Autore": "WELLINGTON; Jean e C.Burleigh", // obbligatorio
+  "Titolo": "Cattivo Rendimento", // obbligatorio
+  "Note": "", // facoltativo
+  "Stato": "prestabile", // facoltativo
+  "CasaEditrice": "La Nuova Italia Editrice", // facoltativo
+  "Prestabile": true, //facoltativo
+  "Lingua": "italiano", //obbligatorio
+  "argomenti": "Psicologia; motivazione; produttività; educazione" //facoltativo
+}
+```
+
 
 ### /deleteBook
-*work in progress* permette all'admin di eliminare un libro specifio, i parametri necessari sono l'id 
+metodo: delete
+permette all'admin di eliminare un libro specifio, i parametri necessari sono l'id, il corpo della richiesta sarà così formato:
+```json 
+{
+    "id":4
+}
+```
+l'id può essere sia una stringa che un numero
 
 ### /updateBook
-*work in progress* permette all'admin di aggiornare un libro specifio, i parametri necessari sono ancora da vedere come saranno
-
+metodo:patch
+permette all'admin di aggiornare un libro specifio, i parametri necessari sono l'id del libro ed un'oggetto dove si specificano i campi da modificare e i loro corrispettivi valori.
+il body della richiesta sarà quindi così formato:
+```json 
+{
+  "id": 4,
+  "update": {
+    "Stato": "non disponibile",
+    "Titolo": "Cattivo Rendimento (Edizione Rivisitata)",
+    "Lingua": "italiano"
+  }
+}
+```
+solo i parametri che vengono specificati nell'oggetto "update" andranno aggiornati
+l'id può essere sia una stringa che un numero
 
 # tabelle
 ### la tabella degli users sarà così formata
@@ -58,4 +97,5 @@ ritorna i libri in basa a nessuno, uno o più filtri
 | 22           | 671.36 CON | Scienze pure | ASSOCIAZIONE ITALIANA DI METALLURGIA | Convegno nazionale trattamenti termici |      | Prestabile | ASS.ITALIANA METALLURGIA | VERO       |  italiana| Metallurgia  |
 
 
-"disciplina" indica di cosa tratta quel libro (es. guerra, fisica, metallurgia, poetica...)
+"argomenti" indica di cosa tratta quel libro (es. guerra, fisica, metallurgia, poetica...)
+_id rappresenta il codice di inventario di quel libro

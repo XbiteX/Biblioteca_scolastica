@@ -137,15 +137,49 @@ app.post("/addBook",authAdmin, async (req, res) => {
         return res.status(500).json({message: 'Internal server error'});
     }
     try{
-        // // const book = req.body; // prendo il libro dal body della richiesta
-        // console.log(book); // logga il libro per vedere cosa contiene
-        // const result = await database.collection('books').insertOne(book); // inserisco il libro nel database
-        // console.log(result); // logga il risultato per vedere cosa contiene
-        // return res.json(result); // ritorna il risultato al client
+        let book = req.body; // prendo il libro dal body della richiesta
+        if(!book || typeof book !== 'object' || Object.keys(book).length === 0) {
+            return res.status(400).json({message: 'Oggetto libro non valido o vuoto'});
+        }
+
+        const fields = ["CDD", "collocazione", "Note", "Prestabile", "Stato", "argomenti"]; // array con i campi del libro
+
+        fields.forEach(element => {
+            if(book[element] === undefined) {
+                book[element] = ""; // se il campo non è definito lo setto a null
+            }
+        });
+
+        console.log(book); // logga il libro per vedere cosa contiene
+
+        if(!book._id){
+            return res.status(400).json({message: "ID del libro non fornito"})
+        }
+         if(!book.collocazione){
+            return res.status(400).json({message: "collocazione non fornita"})
+        }
+         if(!book.Autore){
+            return res.status(400).json({message: "autore del libro non fornto"})
+        }
+         if(!book.Titolo){
+            return res.status(400).json({message: "titolo del libro non fornito"})
+        }
+         if(!book.Lingua){
+            return res.status(400).json({message: "lingua del libro non fornito"})
+        }
+
+        const result = await database.collection("books").insertOne(book); // inserisco il libro nel database
+
+        if(result.acknowledged === false) {
+            return res.status(500).json({message: 'Errore durante l\'inserimento del libro'});
+        }
         return res.status(200).json({message: 'tt ok'}); // ritorna un messaggio di successo al client
     } catch(error){
+        if (error.code === 11000) {
+            return res.status(409).json({ message: 'ID già esistente nel database' });
+        }
         console.error(`Internal adding book`, error);
-        return res.status(500).json({message: 'Internal erroe'});
+        return res.status(500).json({message: 'Internal error'});
     }
 });
 
@@ -155,11 +189,23 @@ app.delete("/deleteBook",authAdmin, async (req, res) => {
         return res.status(500).json({message: 'Internal server error'});
     }
     try{
-        // const bookId = req.body.id; // prendo l'id del libro dal body della richiesta
-        // console.log(bookId); // logga l'id del libro per vedere cosa contiene
-        // const result = await database.collection('books').deleteOne({_id: bookId}); // elimino il libro dal database
-        // console.log(result); // logga il risultato per vedere cosa contiene
-        // return res.json(result); // ritorna il risultato al client
+        const bookID = req.body.id; // prendo l'id dal body della richiesta
+        if (!bookID){
+            return res.status(400).json({message: "ID del libro non fornito"})
+        }
+        if (isNaN(parseInt(bookID))){
+            return res.status(400).json({message: "ID del libro deve esseree un numero o una stringa numerica"})
+        }
+        const result = await database.collection('books').deleteOne({ _id : parseInt(bookID) }); // elimino il libro in base all'id
+
+        //   result è un'istanza di DeleteResult che contiene in seguenti campi
+        //   acknowledged: true,      booleano: indica se il server ha ricevuto e riconosciuto la richiesta
+        //   deletedCount: 1          numero: quanti documenti sono stati effettivamente eliminati
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'Libro non trovato o già eliminato' });
+        }
+        return res.status(200).json({message: 'Libro eliminato con successo'}); // ritorna un messaggio di successo al client
     } catch(error){
         console.error(`Internal deleting book`, error);
         return res.status(500).json({message: 'Internal erroe'});
@@ -172,14 +218,53 @@ app.patch("/updateBook",authAdmin, async (req, res) => {
         return res.status(500).json({message: 'Internal server error'});
     }
     try{
-        // const bookId = req.body.id; // prendo l'id del libro dal body della richiesta
-        // console.log(bookId); // logga l'id del libro per vedere cosa contiene
-        // const result = await database.collection('books').deleteOne({_id: bookId}); // elimino il libro dal database
-        // console.log(result); // logga il risultato per vedere cosa contiene
-        // return res.json(result); // ritorna il risultato al client
+        const bookID = req.body.id; // prendo l'id del libro da modificare
+        const update = req.body.update; // prendo l'oggetto update dal body della richiesta che specifica i campi da modificare
+        if (!update || typeof update !== 'object' || Object.keys(update).length === 0) {
+            return res.status(400).json({ message: 'Oggetto "update" non valido o vuoto' });
+        }
+        if (!bookID) {
+            return res.status(400).json({message: 'ID del libro non fornito'});
+        }
+
+        const filter = { _id: parseInt(bookID) }; // filtro per trovare il libro da modificare
+        const setUpdate = { $set: req.body.update }; // prendo l'oggetto update dal body della richiesta che specifica i campi da modificare
+        const result = await database.collection('books').updateOne(filter, setUpdate); // aggiorno il libro
+        
+        //   result è un'istanza di UpdateResult che contiene in seguenti campi
+        //   acknowledged: true,        true se MongoDB ha ricevuto e riconosciuto la richiesta
+        //   matchedCount: 1,           quanti documenti corrispondevano al filtro
+        //   modifiedCount: 1,          quanti documenti sono stati effettivamente modificati
+        //   upsertedId: null,          ID inserito se è stato fatto un upsert (non in questo caso)
+        //   upsertedCount: 0           come sopra
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ message: 'Libro non trovato' });
+        }
+
+        if (result.modifiedCount === 0) {
+            return res.status(200).json({ message: 'Nessuna modifica effettuata (dati già aggiornati)' });
+        }
+
+        res.status(200).json({message: 'Libro aggiornato con successo'}); // ritorna un messaggio di successo al client
     } catch(error){
-        console.error(`Internal deleting book`, error);
-        return res.status(500).json({message: 'Internal erroe'});
+               console.error("Errore durante l'aggiornamento:", error);
+
+        // Gestione errori noti
+        if (error.name === 'MongoNetworkError') {
+            return res.status(503).json({ message: 'Errore di rete: MongoDB non raggiungibile' });
+        }
+
+        if (error.name === 'MongoServerError') {
+            return res.status(400).json({ message: `Errore MongoDB: ${error.message}` });
+        }
+
+        if (error.name === 'BSONTypeError' || error instanceof TypeError) {
+            return res.status(400).json({ message: 'Errore nel tipo dei dati inviati' });
+        }
+
+        // Errore generico
+        return res.status(500).json({ message: 'Errore interno del server' });
     }
 });
  

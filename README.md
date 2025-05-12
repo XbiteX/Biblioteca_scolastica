@@ -36,7 +36,7 @@ ritorna i libri in base a nessuno, uno o più filtri.
 - /books?stato=disponibile --> filtra i dati in base alla status (es. disponibile, non disponibile, solo consultazione...)
 
 poi c'è anche un ordinamento:
-- /books?ordinamento=titolo --> per ora l'ordinamento è solo alfabetico, a destra dell'uguale (nella query) ci va il campo su cui vogliamo fare l'ordinamento (in questo caso titolo)
+- /books?ordinamento=Titolo --> per ora l'ordinamento è solo alfabetico, a destra dell'uguale (nella query) ci va il campo su cui vogliamo fare l'ordinamento (in questo caso titolo)
 
 ### /addBook
 metodo: post

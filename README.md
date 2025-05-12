@@ -26,16 +26,13 @@ controllerà nel header il codice jwt e un middleware verificherà che questo co
 
 
 ### /books
-ritorna i libri in basa a nessuno, uno o più filtri
-- /books?collocazione=Letteratura italiana --> filtra i dati in base alla collocazione (es. Sceinze pure, Tecnologie, Letteratura...)
+ritorna i libri in base a nessuno, uno o più filtri.
 
+- /books?collocazione=Letteratura italiana --> filtra i dati in base alla collocazione (es. Scienze pure, Tecnologie, Letteratura...)
 - /books?argomenti=Letteratura --> filtra i dati in base alla disciplina (es. Metallurgia, Informatica, Fiscia, Guerra)
-
 - /books?autore=Giovanni Pascoli --> filtra i dati in base all'autore (es. Giovanni Pascoli, Giovanni Tonzig, Pippo Caio)
-
 - /books?titolo=Il visconte dimezzato --> filtra i dati in base al titolo (es. Il visconte dimezzato, Fondamenti di meccanica classica...)
 - /books?lingua=italiano --> filtra i dati in base alla lingua (es. italiano, inglese, spagnolo)
-
 - /books?stato=disponibile --> filtra i dati in base alla status (es. disponibile, non disponibile, solo consultazione...)
 
 ### /addBook

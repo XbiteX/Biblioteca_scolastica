@@ -103,7 +103,7 @@ app.get("/books" ,auth, async (req, res) => {
         const filter = {}; // inizializza un oggetto vuoto per il filtro
 
             if (argomenti) {
-                filter["argomenti"] = argomenti; // aggiungi il filtro per argomenti se gli argomenti sono forniti
+                filter["Argomenti"] = argomenti; // aggiungi il filtro per argomenti se gli argomenti sono forniti
             }
 
             if (autore) {
@@ -120,7 +120,7 @@ app.get("/books" ,auth, async (req, res) => {
             }
 
             if (collocazione) {
-                filter["collocazione"] = collocazione; // aggiungi il filtro per Collocazione se Collocazione è fornita
+                filter["Collocazione"] = collocazione; // aggiungi il filtro per Collocazione se Collocazione è fornita
             }
 
         console.log(filter); // logga il filtro per vedere cosa contiene

@@ -35,6 +35,9 @@ ritorna i libri in base a nessuno, uno o più filtri.
 - /books?lingua=italiano --> filtra i dati in base alla lingua (es. italiano, inglese, spagnolo)
 - /books?stato=disponibile --> filtra i dati in base alla status (es. disponibile, non disponibile, solo consultazione...)
 
+poi c'è anche un ordinamento:
+- /books?ordinamento=titolo --> per ora l'ordinamento è solo alfabetico, a destra dell'uguale (nella query) ci va il campo su cui vogliamo fare l'ordinamento (in questo caso titolo)
+
 ### /addBook
 metodo: post
 permette all'admin di aggiungere un libro specifico, i parametri obbligatori sono l'id la collocazione, l'autore, la lingua e il titolo.

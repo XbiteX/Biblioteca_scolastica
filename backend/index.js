@@ -127,7 +127,23 @@ app.get("/books" ,auth, async (req, res) => {
             }
 
         console.log(filter); // logga il filtro per vedere cosa contiene
-        const result = await database.collection('books').find(filter).toArray();
+        let result = await database.collection('books').find(filter).toArray();
+
+        // funzione per ordinare i risultati in base al campo specificato
+        if(ordinamento){
+            result.sort((a, b) => {
+                if (a[ordinamento] < b[ordinamento]) {
+                    return -1;
+                }
+                if (a[ordinamento] > b[ordinamento]) {
+                    return 1;
+                }
+                return 0;
+
+            })
+        }
+
+
         console.log(result); // logga il risultato per vedere cosa contiene
         return res.json(result);
     } catch(error){

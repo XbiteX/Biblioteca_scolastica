@@ -93,18 +93,21 @@ app.get("/books" ,auth, async (req, res) => {
     }
     try{
         // Prendi i parametri di query dalla richiesta
-        const argomenti = req.query.argomenti; // disciplina del libro
+        // argomenti momentaneamente non utilizzati
+        // const argomenti = req.query.argomenti; // disciplina del libro
         const autore = req.query.autore; // autore del libro
         const titolo = req.query.titolo; // titolo del libro
         const lingua = req.query.lingua; // lingua del libro
         const stato = req.query.stato; // stato del libro
         const collocazione = req.query.collocazione; // locazione del libro
 
+        const ordinamento = req.query.ordinamento; // ordinamento dei risultati
+
         const filter = {}; // inizializza un oggetto vuoto per il filtro
 
-            if (argomenti) {
-                filter["Argomenti"] = argomenti; // aggiungi il filtro per argomenti se gli argomenti sono forniti
-            }
+            // if (argomenti) {
+            //     filter["Argomenti"] = argomenti; // aggiungi il filtro per argomenti se gli argomenti sono forniti
+            // }
 
             if (autore) {
                 filter["Autore"] = autore; // aggiungi il filtro per autore se autore è fornita

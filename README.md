@@ -29,7 +29,7 @@ controllerà nel header il codice jwt e un middleware verificherà che questo co
 ritorna i libri in base a nessuno, uno o più filtri.
 
 - /books?collocazione=Letteratura italiana --> filtra i dati in base alla collocazione (es. Scienze pure, Tecnologie, Letteratura...)
-- /books?argomenti=Letteratura --> filtra i dati in base alla disciplina (es. Metallurgia, Informatica, Fiscia, Guerra)
+<!-- - /books?argomenti=Letteratura filtra i dati in base alla disciplina (es. Metallurgia, Informatica, Fiscia, Guerra) -->
 - /books?autore=Giovanni Pascoli --> filtra i dati in base all'autore (es. Giovanni Pascoli, Giovanni Tonzig, Pippo Caio)
 - /books?titolo=Il visconte dimezzato --> filtra i dati in base al titolo (es. Il visconte dimezzato, Fondamenti di meccanica classica...)
 - /books?lingua=italiano --> filtra i dati in base alla lingua (es. italiano, inglese, spagnolo)
@@ -44,7 +44,7 @@ I parametri facoltativi possono non essere messi, quelli obbligatori no.
 {
   "_id": 5, // obbligatorio, rappresenta il codice di inventario, sarà l'admin a passarlo direttamente al server (l'id non verrò generato da mongodb)
   "CDD": "371.9 BUR", // facoltativo
-  "collocazione": "letteratura italiana", // obbligatorio
+  "Collocazione": "letteratura italiana", // obbligatorio
   "Autore": "WELLINGTON; Jean e C.Burleigh", // obbligatorio
   "Titolo": "Cattivo Rendimento", // obbligatorio
   "Note": "", // facoltativo
@@ -52,7 +52,7 @@ I parametri facoltativi possono non essere messi, quelli obbligatori no.
   "CasaEditrice": "La Nuova Italia Editrice", // facoltativo
   "Prestabile": true, //facoltativo
   "Lingua": "it", //obbligatorio
-  "argomenti": "Psicologia; motivazione; produttività; educazione" //facoltativo
+  "Argomenti": "Psicologia; motivazione; produttività; educazione" //facoltativo
 }
 ```
 

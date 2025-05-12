@@ -27,16 +27,20 @@ controllerà nel header il codice jwt e un middleware verificherà che questo co
 
 ### /books
 ritorna i libri in basa a nessuno, uno o più filtri
-- /books?category=Scienze pure --> filtra i dati in base alla categoria (es. Sceinze pure, Tecnologie, Letteratura...)
-- /books?subject=Scienze pure --> filtra i dati in base alla disciplina (es. Metallurgia, Informatica, Fiscia, Guerra)
-- /books?author=Scienze pure --> filtra i dati in base all'autore (es. Giovanni Pascoli, Giovanni Tonzig, Pippo Caio)
-- /books?title=Scienze pure --> filtra i dati in base al titolo (es. Il visconte dimezzato, Fondamenti di meccanica classica...)
-- /books?language=Scienze pure --> filtra i dati in base alla lingua (es. it, en, es)
-- /books?status=Scienze pure --> filtra i dati in base alla status (es. disponibile, non disponibile, solo consultazione...)
+- /books?collocazione=Letteratura italiana --> filtra i dati in base alla collocazione (es. Sceinze pure, Tecnologie, Letteratura...)
+
+- /books?argomenti=Letteratura --> filtra i dati in base alla disciplina (es. Metallurgia, Informatica, Fiscia, Guerra)
+
+- /books?autore=Giovanni Pascoli --> filtra i dati in base all'autore (es. Giovanni Pascoli, Giovanni Tonzig, Pippo Caio)
+
+- /books?titolo=Il visconte dimezzato --> filtra i dati in base al titolo (es. Il visconte dimezzato, Fondamenti di meccanica classica...)
+- /books?lingua=italiano --> filtra i dati in base alla lingua (es. italiano, inglese, spagnolo)
+
+- /books?stato=disponibile --> filtra i dati in base alla status (es. disponibile, non disponibile, solo consultazione...)
 
 ### /addBook
 metodo: post
-permette all'admin di aggiungere un libro specifio, i parametri obbligatori sono l'id la collocazione, l'autore, la lingua e il titolo.
+permette all'admin di aggiungere un libro specifico, i parametri obbligatori sono l'id la collocazione, l'autore, la lingua e il titolo.
 I parametri facoltativi possono non essere messi, quelli obbligatori no.
  il body della richiesta sarà così formato:
 ```json 
@@ -50,7 +54,7 @@ I parametri facoltativi possono non essere messi, quelli obbligatori no.
   "Stato": "prestabile", // facoltativo
   "CasaEditrice": "La Nuova Italia Editrice", // facoltativo
   "Prestabile": true, //facoltativo
-  "Lingua": "italiano", //obbligatorio
+  "Lingua": "it", //obbligatorio
   "argomenti": "Psicologia; motivazione; produttività; educazione" //facoltativo
 }
 ```

@@ -93,36 +93,39 @@ app.get("/books" ,auth, async (req, res) => {
     }
     try{
         // Prendi i parametri di query dalla richiesta
-        const category = req.query.category; // categoria del libro
-        const subject = req.query.subject; // disciplina del libro
-        const author = req.query.author; // autore del libro
-        const title = req.query.title; // titolo del libro
-        const language = req.query.language; // lingua del libro
-        const status = req.query.status; // stato del libro
+        const argomenti = req.query.argomenti; // disciplina del libro
+        const autore = req.query.autore; // autore del libro
+        const titolo = req.query.titolo; // titolo del libro
+        const lingua = req.query.lingua; // lingua del libro
+        const stato = req.query.stato; // stato del libro
+        const collocazione = req.query.collocazione; // locazione del libro
 
-        const filter = {}; // <-- inizializza un oggetto vuoto per il filtro
-            if (category) {
-                filter["Categoria"] = category; // <-- aggiungi il filtro per categoria se categoria è fornita
-            }
-            if (subject) {
-                filter["Disciplina"] = subject; // <-- aggiungi il filtro per materia se materia è fornita
-            }
-            if (author) {
-                filter["Autore"] = author; // <-- aggiungi il filtro per autore se autore è fornita
-            }
-            if (title) {
-                filter["Titolo"] = title; // <-- aggiungi il filtro per Titolo se Titolo è fornita
-            }
-            if (language) {
-                filter["Lingua"] = language; // <-- aggiungi il filtro per Lingua se Lingua è fornita
-            }
-            if (status) {
-                filter["Stato"] = status; // <-- aggiungi il filtro per Stato se Stato è fornita
+        const filter = {}; // inizializza un oggetto vuoto per il filtro
+
+            if (argomenti) {
+                filter["argomenti"] = argomenti; // aggiungi il filtro per argomenti se gli argomenti sono forniti
             }
 
-        console.log(filter); // <-- logga il filtro per vedere cosa contiene
+            if (autore) {
+                filter["Autore"] = autore; // aggiungi il filtro per autore se autore è fornita
+            }
+            if (titolo) {
+                filter["Titolo"] = titolo; // aggiungi il filtro per Titolo se Titolo è fornita
+            }
+            if (lingua) {
+                filter["Lingua"] = lingua; // aggiungi il filtro per Lingua se Lingua è fornita
+            }
+            if (stato) {
+                filter["Stato"] = stato; // aggiungi il filtro per Stato se Stato è fornita
+            }
+
+            if (collocazione) {
+                filter["collocazione"] = collocazione; // aggiungi il filtro per Collocazione se Collocazione è fornita
+            }
+
+        console.log(filter); // logga il filtro per vedere cosa contiene
         const result = await database.collection('books').find(filter).toArray();
-        console.log(result); // <-- logga il risultato per vedere cosa contiene
+        console.log(result); // logga il risultato per vedere cosa contiene
         return res.json(result);
     } catch(error){
         console.error(`Internal getting books`, error);
@@ -142,7 +145,7 @@ app.post("/addBook",authAdmin, async (req, res) => {
             return res.status(400).json({message: 'Oggetto libro non valido o vuoto'});
         }
 
-        const fields = ["CDD", "collocazione", "Note", "Prestabile", "Stato", "argomenti"]; // array con i campi del libro
+        const fields = ["CDD", "Note", "Prestabile", "Stato", "argomenti"]; // array con i campi del libro non obbligatori
 
         fields.forEach(element => {
             if(book[element] === undefined) {
@@ -268,3 +271,11 @@ app.patch("/updateBook",authAdmin, async (req, res) => {
     }
 });
  
+
+
+[{
+    nome: "_id",
+    type: "number",
+    require: true,
+    value:undefined
+},{},{}]

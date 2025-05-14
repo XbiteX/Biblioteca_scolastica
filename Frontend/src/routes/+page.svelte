@@ -33,7 +33,7 @@
       } else {
         localStorage.setItem('token', data.token);
         // Puoi anche reindirizzare alla pagina della biblioteca o altro
-        window.location.href = '/books';
+        window.location.href = '/app/login';
       }
     } catch (err) {
       error = 'Errore di rete o del server';

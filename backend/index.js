@@ -100,6 +100,7 @@ app.get("/books" ,auth, async (req, res) => {
         const lingua = req.query.lingua; // lingua del libro
         const stato = req.query.stato; // stato del libro
         const collocazione = req.query.collocazione; // locazione del libro
+        const prestabile = req.query.prestabile; // prestabile del libro
 
         const ordinamento = req.query.ordinamento; // ordinamento dei risultati
 
@@ -124,6 +125,9 @@ app.get("/books" ,auth, async (req, res) => {
 
             if (collocazione) {
                 filter["Collocazione"] = collocazione; // aggiungi il filtro per Collocazione se Collocazione è fornita
+            }
+            if (prestabile) {
+                filter["Prestabile"] = prestabile; // aggiungi il filtro per Prestabile se Prestabile è fornita
             }
 
         console.log(filter); // logga il filtro per vedere cosa contiene
@@ -292,9 +296,3 @@ app.patch("/updateBook",authAdmin, async (req, res) => {
  
 
 
-[{
-    nome: "_id",
-    type: "number",
-    require: true,
-    value:undefined
-},{},{}]

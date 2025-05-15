@@ -34,6 +34,7 @@ ritorna i libri in base a nessuno, uno o più filtri.
 - /books?titolo=Il visconte dimezzato --> filtra i dati in base al titolo (es. Il visconte dimezzato, Fondamenti di meccanica classica...)
 - /books?lingua=italiano --> filtra i dati in base alla lingua (es. italiano, inglese, spagnolo)
 - /books?stato=disponibile --> filtra i dati in base alla status (es. disponibile, non disponibile, solo consultazione...)
+- /books?prestabile=TRUE --> filtra i dati in base a se sono prestabili (e quindi possono essere presi in prestito) o non lo sono (e quindi sono già presi in prestito)
 
 poi c'è anche un ordinamento:
 - /books?ordinamento=Titolo --> per ora l'ordinamento è solo alfabetico, a destra dell'uguale (nella query) ci va il campo su cui vogliamo fare l'ordinamento (in questo caso titolo)
@@ -53,7 +54,7 @@ I parametri facoltativi possono non essere messi, quelli obbligatori no.
   "Note": "", // facoltativo
   "Stato": "prestabile", // facoltativo
   "CasaEditrice": "La Nuova Italia Editrice", // facoltativo
-  "Prestabile": true, //facoltativo
+  "Prestabile": "TRUE", //facoltativo
   "Lingua": "it", //obbligatorio
   "Argomenti": "Psicologia; motivazione; produttività; educazione" //facoltativo
 }

@@ -1,52 +1,72 @@
 <script>
-    let codiceISA = "";
-    let password = "";
+  let isa = '';
+  let password = '';
+  let error = '';
+  let loading = false;
 
-    async function Login(event) {
-        event.preventDefault(); 
-        try {
-            const response = await fetch("https://bookstoreonline.onrender.com/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ codiceISA, password }),
-            });
+  async function handleLogin() {
+    loading = true;
+    error = '';
+    
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                alert("Errore: " + errorData.message);
-                return;
-            }
 
-            const data = await response.json();
-            console.log("Token ricevuto:", data.token);
-            } catch (error) {
-            console.error("Errore nella fetch:", error);
-        }
+    try {
+      const response = await fetch('https://bookstoreonline.onrender.com/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ isa, password })
+      });
+
+      const data = await response.json();
+
+      console.log('status:', response.status);
+      console.log('data:', data);
+      console.log(typeof(isa));
+      console.log(password);
+      console.log(localStorage.getItem('token'));
+
+
+      if (!response.ok) {
+        error = data.message || 'Credenziali non valide';
+      } else {
+        localStorage.setItem('token', data.token);
+        // Puoi anche reindirizzare alla pagina della biblioteca o altro
+        window.location.href = '/app/dashboard';
+      }
+    } catch (err) {
+      error = 'Errore di rete o del server';
+    } finally {
+      loading = false;
     }
+  }
 </script>
 
-<h1>FORM DI LOGIN</h1>
+<form on:submit|preventDefault={handleLogin} class="p-4 rounded bg-white shadow space-y-4 max-w-sm mx-auto mt-10">
+  <h2 class="text-xl font-bold">Login Biblioteca</h2>
 
-<form class="login-form" on:submit|preventDefault={Login}>
-    <label for="codiceISA">Codice ISA</label>
-    <input
-        id="codiceISA"
-        type="text"
-        bind:value={codiceISA}
-        placeholder="Inserisssssci il codice ISA"
-    />
-    <br><br>
+  <input
+    type="text"
+    bind:value={isa}
+    placeholder="Codice ISA"
+    class="w-full p-2 border rounded"
+    required
+  />
 
-    <label for="password">Password</label>
-    <input
-        id="password"
-        type="password"
-        bind:value={password}
-        placeholder="Inserisci la password"
-    />
-    <br><br>
+  <input
+    type="password"
+    bind:value={password}
+    placeholder="Password"
+    class="w-full p-2 border rounded"
+    required
+  />
 
-    <button type="submit">Accedi</button>
+  {#if error}
+    <p class="text-red-600">{error}</p>
+  {/if}
+
+  <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded" disabled={loading}>
+    {loading ? 'Accesso...' : 'Accedi'}
+  </button>
 </form>

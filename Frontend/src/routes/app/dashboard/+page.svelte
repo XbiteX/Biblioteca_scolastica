@@ -4,9 +4,9 @@
     import BookCard from '$lib/components/bookCard.svelte';
     import { Toggle } from "flowbite-svelte";
 
-
-    let ordinamento = $state();
-    let autore = $state();
+    // questi sono i parametri che verranno utilizzati per fare la query al server
+    let ordinamento = $state(); // se è == "Titolo" ordina per titolo
+    let autore = $state(); 
     let titolo = $state();
     let lingua = $state();
     let stato = $state();
@@ -14,7 +14,6 @@
     let prestabile = $state(); 
 
     let books = $state() //array contenente i libri
-    // let disponibile = $state(false) // booleano per il toggle della disponibilità dei libri
 
     async function fetchBooks() {
         let params = new URLSearchParams();
@@ -46,6 +45,7 @@
 		books = await risposta.json();
     }
 
+    // questa funzione viene chiamata quando la pagina viene caricata e carica tutti i libri (senza alcun filtro essendo che all'inizio i parametri sono undefined)
 	onMount(async () => {
 
         if(!localStorage.getItem('token')){

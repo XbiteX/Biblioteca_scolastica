@@ -32,6 +32,7 @@
         error = data.message || 'Credenziali non valide';
       } else {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('ruolo', data.ruolo);
         // Puoi anche reindirizzare alla pagina della biblioteca o altro
         window.location.href = '/app/dashboard';
       }

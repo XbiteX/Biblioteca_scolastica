@@ -19,9 +19,11 @@ e il body sarà così formato:
     "password": "password fornita dall'utente tramite un form"
 }
 ```
-se l'utente viene trovato nel database allora il backend invierà un codcice JWT al frontend, da quel momento il poi il frontend
+se l'utente viene trovato nel database allora il backend invierà un codcice JWT al frontend che lo memorizzerà in localstorage, da quel momento il poi il frontend
 ogni volta che farà una richiesta al server dovrà includere nel campo header questo codice jwt, il server una volta ricevuta la richesta 
 controllerà nel header il codice jwt e un middleware verificherà che questo codice jwt sia corretto.
+
+il server invierà al frontend anche il ruolo dell'utente che si è loggato, in questo modo il frontend abiliterà certe funzionalità (come quella di rimozione) nel caso in cui l'utente sia l'admin
 
 
 

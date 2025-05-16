@@ -76,7 +76,8 @@ app.post("/login", async (req,res)=>{
         res.json({ //ritorna il token al client
             success:true,
             token:token,
-            message: "token generato con successo"
+            message: "token generato con successo",
+            ruolo: user.ruolo
         })
     }catch(error) {
         console.error(error);

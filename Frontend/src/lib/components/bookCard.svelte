@@ -2,11 +2,8 @@
   import { Card, Button } from "flowbite-svelte";
   import { createEventDispatcher } from "svelte";
 
-  // Prendi tutte le props da $props(), inclusa isAdmin con default a false
-  let { 
-    CDD, autore, argomenti, lingua, titolo, casa_editrice, 
-    collocazione, stato, prestabile, note, isAdmin = false 
-  } = $props();
+  // Prendi tutti gli argomenti dal genitore
+  let { CDD, autore, argomenti, lingua, titolo, casa_editrice, collocazione, stato, prestabile, note, isAdmin = false } = $props();
 
   const dispatch = createEventDispatcher();
 

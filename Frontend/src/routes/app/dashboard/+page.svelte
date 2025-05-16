@@ -15,7 +15,7 @@
 
     let books = $state(); //array contenente i libri
 
-    let ruolo = localStorage.getItem("ruolo");
+    let ruolo =$state();
 
     async function fetchBooks() {
         let params = new URLSearchParams();
@@ -34,6 +34,8 @@
 
         const url = `https://bookstoreonline.onrender.com/books?${params.toString()}`;
         console.log(params.toString());
+
+
         const risposta = await fetch(url, {
             method: "GET",
             headers: {
@@ -57,6 +59,8 @@
         if (!localStorage.getItem("token")) {
             window.location.href = "/app/login";
         }
+
+        ruolo = localStorage.getItem("ruolo");
         console.log(localStorage.getItem("token"));
 
         const response = await fetchBooks();
@@ -91,38 +95,42 @@
     }
 
     async function handleDeleteBook(bookID) {
-  if (!bookID) {
-    alert('ID libro non valido');
-    return;
-  }
+        console.log(bookID);
+        if (!bookID) {
+            alert('ID libro non valido');
+            return;
+        }
 
-  if (!confirm('Sei sicuro di voler eliminare questo libro?')) {
-    return;
-  }
+        //questa parte è un pò problematica
+        if (!confirm('Sei sicuro di voler eliminare questo libro?')) {
+            return;
+        }
+        // fine parte problematica
 
-  try {
-    const response = await fetch('https://bookstoreonline.onrender.com/deleteBook', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ id: bookID })
-    });
+        try {
+            const response = await fetch('https://bookstoreonline.onrender.com/deleteBook', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ id: bookID })
+            });
 
-    const data = await response.json();
+            const data = await response.json();
+            console.log(data);
 
-    if (response.ok) {
-      alert('Libro eliminato con successo');
-      await fetchBooks(); // aggiorna la lista dei libri
-    } else {
-      alert(data.message || 'Errore durante l\'eliminazione.');
+            if (response.ok) {
+                alert('Libro eliminato con successo');
+                await fetchBooks(); // aggiorna la lista dei libri
+            } else {
+                alert(data.message || 'Errore durante l\'eliminazione.');
+            }
+        } catch (err) {
+            alert('Errore di rete o del server.');
+            console.error(err);
+        }
     }
-  } catch (err) {
-    alert('Errore di rete o del server.');
-    console.error(err);
-  }
-}
 
 </script>
 
@@ -166,6 +174,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
         {#each books as book}
+        {console.log(book)}
             <BookCard
                 titolo={book.Titolo}
                 casa_editrice={book["Casa editrice"]}
@@ -176,7 +185,7 @@
                 collocazione={book.Collocazione}
                 prestabile={book.Prestabile}
                 isAdmin={ruolo === "admin"}
-                on:delete={() => handleDeleteBook(book._id)}
+                on:delete={() => handleDeleteBook(book["_id"])}
             />
         {/each}
     </div>

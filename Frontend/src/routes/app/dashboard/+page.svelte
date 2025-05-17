@@ -53,6 +53,7 @@
         }
         books = await risposta.json();
     }
+    
 
     // questa funzione viene chiamata quando la pagina viene caricata e carica tutti i libri (senza alcun filtro essendo che all'inizio i parametri sono undefined)
     onMount(async () => {
@@ -168,8 +169,18 @@
         <button
             onclick={resetQuery}
             class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition"
-            >Reset</button
+            >Reset</button>
+        
+
+        {#if ruolo === 'admin'}
+        <button
+            onclick={() => window.location.href = '/app/addBook'}
+            class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
         >
+            Aggiungi Libro
+        </button>
+        {/if}
+
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">

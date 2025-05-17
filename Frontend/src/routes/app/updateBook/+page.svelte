@@ -1,73 +1,91 @@
 <script>
-  let updateData = { id: null, update: {} };
-  let successMessage = '';
-  let errorMessage = '';
+  let bookId = '';
+  let bookData = null;
   let loading = false;
+  let error = '';
+  let success = '';
 
-  const updateFields = [
-    "Titolo", "Collocazione", "Autore", "Lingua", "CDD", "Note", "CasaEditrice", "Prestabile", "Stato", "Argomenti"
-  ];
-
-  function handleFieldChange(field, value) {
-    updateData.update[field] = value;
-  }
-
-  async function handleSubmit() {
-    if (!updateData.id || Object.keys(updateData.update).length === 0) {
-      alert("Inserisci l'ID del libro e almeno un campo da aggiornare.");
-      return;
-    }
+  async function caricaLibro() {
+    error = '';
+    success = '';
+    loading = true;
 
     try {
-      loading = true;
-      const response = await fetch('https://bookstoreonline.onrender.com/updateBook', {
+      const res = await fetch(`/api/getBook?id=${bookId}`);
+      if (!res.ok) throw new Error('Libro non trovato');
+      bookData = await res.json();
+    } catch (e) {
+      error = 'Errore nel recupero del libro.';
+      bookData = null;
+    }
+
+    loading = false;
+  }
+
+  async function aggiornaLibro() {
+    error = '';
+    success = '';
+    loading = true;
+
+    try {
+      const res = await fetch('/api/updateBook', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(updateData)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: bookId, ...bookData })
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        successMessage = 'Libro aggiornato con successo!';
-        updateData = { id: null, update: {} };
-      } else {
-        errorMessage = data.message || 'Errore durante l\'aggiornamento del libro.';
-      }
-    } catch (err) {
-      errorMessage = 'Errore di rete o del server.';
-      console.error(err);
-    } finally {
-      loading = false;
+      if (!res.ok) throw new Error('Errore aggiornamento');
+      success = 'Libro aggiornato con successo!';
+    } catch (e) {
+      error = 'Errore durante aggiornamento.';
     }
+
+    loading = false;
   }
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="max-w-lg mx-auto bg-white p-6 rounded shadow">
-  <h2 class="text-xl font-bold mb-4">Aggiorna Libro</h2>
+<h1>Aggiorna libro</h1>
 
-  <div class="mb-4">
-    <label>ID Libro (obbligatorio)</label>
-    <input type="number" bind:value={updateData.id} required class="w-full p-2 border rounded" />
-  </div>
+<div>
+  <label>ID libro:</label>
+  <input bind:value={bookId} />
+  <button on:click={caricaLibro}>Carica dati</button>
+</div>
 
-  {#each updateFields as field}
-    <div class="mb-4">
-      <label>{field}</label>
-      <input type="text" on:input={(e) => handleFieldChange(field, e.target.value)} class="w-full p-2 border rounded" />
+{#if loading}
+  <p>Caricamento in corso...</p>
+{/if}
+
+{#if error}
+  <p style="color: red;">{error}</p>
+{/if}
+
+{#if success}
+  <p style="color: green;">{success}</p>
+{/if}
+
+{#if bookData}
+  <form on:submit|preventDefault={aggiornaLibro}>
+    <div>
+      <label>Titolo:</label>
+      <input bind:value={bookData.titolo} />
     </div>
-  {/each}
 
-  <button type="submit" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600" disabled={loading}>
-    {loading ? 'Caricamento...' : 'Aggiorna Libro'}
-  </button>
+    <div>
+      <label>Autore:</label>
+      <input bind:value={bookData.autore} />
+    </div>
 
-  {#if successMessage}
-    <p class="mt-4 text-green-600">{successMessage}</p>
-  {/if}
-  {#if errorMessage}
-    <p class="mt-4 text-red-600">{errorMessage}</p>
-  {/if}
-</form>
+    <div>
+      <label>Casa Editrice:</label>
+      <input bind:value={bookData.casaEditrice} />
+    </div>
+
+    <div>
+      <label>Anno:</label>
+      <input bind:value={bookData.anno} type="number" />
+    </div>
+
+    <button type="submit">Aggiorna</button>
+  </form>
+{/if}

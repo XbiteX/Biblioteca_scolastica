@@ -1,9 +1,11 @@
 <script>
-  let bookId = '';
-  let bookData = null;
+  import { Label, Input } from "flowbite-svelte";
+
+  let bookId;
+  let bookData = {};
   let loading = false;
-  let error = '';
-  let success = '';
+  let error;
+  let success;
 
   async function caricaLibro() {
     error = '';
@@ -12,10 +14,10 @@
 
     try {
       const res = await fetch(`/api/getBook?id=${bookId}`);
-      if (!res.ok) throw new Error('Libro non trovato');
+      if (!res.ok) throw new Error(res.json().message); // ritorna il messaggio di errore dal server
       bookData = await res.json();
     } catch (e) {
-      error = 'Errore nel recupero del libro.';
+      error = e.message || 'Errore durante il caricamento del libro.';
       bookData = null;
     }
 
@@ -31,7 +33,7 @@
       const res = await fetch('/api/updateBook', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: bookId, ...bookData })
+        body: JSON.stringify({ id: bookId, update: bookData })
       });
 
       if (!res.ok) throw new Error('Errore aggiornamento');
@@ -47,8 +49,8 @@
 <h1>Aggiorna libro</h1>
 
 <div>
-  <label>ID libro:</label>
-  <input bind:value={bookId} />
+  <label for="bookId">ID libro:</label>
+  <input id="bookId" bind:value={bookId} />
   <button on:click={caricaLibro}>Carica dati</button>
 </div>
 
@@ -67,23 +69,23 @@
 {#if bookData}
   <form on:submit|preventDefault={aggiornaLibro}>
     <div>
-      <label>Titolo:</label>
-      <input bind:value={bookData.titolo} />
+      <Label for="titolo">Titolo:</Label>
+      <Input id="titolo" bind:value={bookData.titolo} />
     </div>
 
     <div>
-      <label>Autore:</label>
-      <input bind:value={bookData.autore} />
+      <Label for="autore">Autore:</Label>
+      <Input id="autore" bind:value={bookData.autore} />
     </div>
 
     <div>
-      <label>Casa Editrice:</label>
-      <input bind:value={bookData.casaEditrice} />
+      <Label for="casaEditrice">Casa Editrice:</Label>
+      <Input id="casaEditrice" bind:value={bookData.casaEditrice} />
     </div>
 
     <div>
-      <label>Anno:</label>
-      <input bind:value={bookData.anno} type="number" />
+      <Label for="anno">Anno:</Label>
+      <Input id="anno" bind:value={bookData.anno} type="number" />
     </div>
 
     <button type="submit">Aggiorna</button>

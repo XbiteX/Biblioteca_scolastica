@@ -1,4 +1,5 @@
 <script>
+  import {Button, Input, Label} from 'flowbite-svelte';
   let error = '';
   let successMessage = '';
   let loading = false;
@@ -74,55 +75,22 @@
   }
 </script>
 
-<style>
-  .error { color: #e53e3e; }
-  .success { color: #48bb78; }
-  .form-container {
-    max-width: 600px;
-    margin: auto;
-    padding: 1rem;
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  .form-field { margin-bottom: 1rem; }
-  label { display: block; font-weight: bold; margin-bottom: 0.25rem; }
-  input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #cbd5e0;
-    border-radius: 0.375rem;
-  }
-  button {
-    padding: 0.75rem 1.5rem;
-    background: #3182ce;
-    color: white;
-    border: none;
-    border-radius: 0.375rem;
-    cursor: pointer;
-  }
-  button:disabled {
-    background: #a0aec0;
-    cursor: not-allowed;
-  }
-</style>
-
-<div class="form-container">
+<div class="max-w-[600px] mx-auto p-4 bg-white rounded shadow-md">
   <h2>Aggiungi un nuovo libro</h2>
   {#if error}
-    <p class="error">{error}</p>
+    <p class="text-red-400">{error}</p>
   {/if}
   {#if successMessage}
-    <p class="success">{successMessage}</p>
+    <p class="text-green-500">{successMessage}</p>
   {/if}
 
   <form on:submit|preventDefault={handleSubmit}>
     {#each campi as campo}
-      <div class="form-field">
-        <label for={campo.key}>
+      <div class="mb-4">
+        <Label for={campo.key}>
           {campo.label}{campo.required ? ' *' : ''}
-        </label>
-        <input
+        </Label>
+        <Input
           id={campo.key}
           type={campo.type}
           bind:value={book[campo.key]}
@@ -130,12 +98,12 @@
         />
       </div>
     {/each}
-    <button type="submit" disabled={loading}>
+    <Button type="submit" disabled={loading}>
       {#if loading}
         Caricamento...
       {:else}
         Invia
       {/if}
-    </button>
+    </Button>
   </form>
 </div>

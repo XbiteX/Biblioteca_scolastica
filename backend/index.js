@@ -266,7 +266,7 @@ app.patch("/updateBook",authAdmin, async (req, res) => {
         //   upsertedCount: 0           come sopra
 
         if (result.matchedCount === 0) {
-            return res.status(404).json({ message: 'Libro non trovato' });
+            return res.status(404).json({ message: 'Libro non trovato  (nessun libro corrisponde all id' });
         }
 
         if (result.modifiedCount === 0) {

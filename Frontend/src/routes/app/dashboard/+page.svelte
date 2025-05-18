@@ -166,10 +166,7 @@
 
         <Toggle on:change={toogleAvailable}>disponibile</Toggle>
 
-        <button
-            onclick={resetQuery}
-            class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition"
-            >Reset</button>
+        <button onclick={resetQuery} class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition">Reset</button>
         
 
         {#if ruolo === 'admin'}

@@ -1,9 +1,9 @@
 # Libreria scolastica
 questo è un progetto scolastico per gestire una biblioteca
 
-il deployment del [databasa](#databasa) è stato fatto con [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)  
-il deployment del [backend](#backend) è stato fatto con Render al [link](https://bookstoreonline.onrender.com/)  
-il deployment del [frontend](#frontend) è stato fatto con Vercel al [link](https://biblioteca-scolastica.vercel.app)  
+il deployment del [database](#database) è stato fatto con [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)  
+il deployment del [backend](./backend/README.md) è stato fatto con Render al [link](https://bookstoreonline.onrender.com/)  
+il deployment del [frontend](./Frontend/README.md) è stato fatto con Vercel al [link](https://biblioteca-scolastica.vercel.app)  
 
 ## Database
 ### il database si compone di 3 collection (o tabelle) 

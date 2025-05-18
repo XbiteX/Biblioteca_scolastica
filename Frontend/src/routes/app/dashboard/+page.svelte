@@ -2,7 +2,7 @@
 <script>
     import { onMount } from "svelte";
     import BookCard from "$lib/components/bookCard.svelte";
-    import { Toggle } from "flowbite-svelte";
+    import { Toggle, Modal, Button, Input, Label } from "flowbite-svelte";
 
     // questi sono i parametri che verranno utilizzati per fare la query al server
     let ordinamento = $state(); // se è == "Titolo" ordina per titolo
@@ -15,7 +15,12 @@
 
     let books = $state(); //array contenente i libri
 
-    let ruolo =$state();
+    let newToUpdateBook = $state(); // libro contenente i dati nuovi del libro da aggiornare
+    let toUpdateBook = $state(); // libro contenente i dati vecchi del libro da aggiornare (da passare al modale per far vedere la differenza tra quelli vecchi e quelli nuovi)
+
+    let modal = $state(false); // se è == true mostra il modale
+
+    let ruolo =$state(); // il ruolo dell'utente (admin o student)
 
     async function fetchBooks() {
         let params = new URLSearchParams();
@@ -133,6 +138,67 @@
         }
     }
 
+
+    async function handelUpdateBook(bookID, book) {
+        console.log(bookID);
+
+        modal = true 
+        toUpdateBook = book;
+
+        // try {
+        //     const response = await fetch('https://bookstoreonline.onrender.com/updateBook', {
+        //         method: 'PATCH',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': `Bearer ${localStorage.getItem('token')}`
+        //         },
+        //         body: JSON.stringify({ id: bookID })
+        //     });
+
+        //     const data = await response.json();
+        //     console.log(data);
+
+        //     if (response.ok) {
+        //         alert('Libro aggiornato con successo');
+        //         await fetchBooks(); // aggiorna la lista dei libri
+        //     } else {
+        //         alert(data.message || 'Errore durante l\'aggiornamento.');
+        //     }
+        // } catch (err) {
+        //     alert('Errore di rete o del server.');
+        //     console.error(err);
+        // }
+    }
+
+    async function aggiornaLibro() {
+        console.log(toUpdateBook);
+        console.log(toUpdateBookData);
+
+        try {
+            const response = await fetch('https://bookstoreonline.onrender.com/updateBook', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ id: bookID, update: toUpdateBookData })
+            });
+
+            const data = await response.json();
+            console.log(data);
+
+            if (response.ok) {
+                alert('Libro aggiornato con successo');
+                modal = false;
+                await fetchBooks(); // aggiorna la lista dei libri
+            } else {
+                alert(data.message || 'Errore durante l\'aggiornamento.');
+            }
+        } catch (err) {
+            alert('Errore di rete o del server.');
+            console.error(err);
+        }
+    }
 </script>
 
 <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -184,17 +250,39 @@
         {#each books as book}
         {console.log(book)}
             <BookCard
-                titolo={book.Titolo}
-                casa_editrice={book["Casa editrice"]}
-                autore={book.Autore}
-                lingua={book.Lingua}
-                stato={book.Stato}
-                argomenti={book.Argomenti}
-                collocazione={book.Collocazione}
-                prestabile={book.Prestabile}
+                {...book}
                 isAdmin={ruolo === "admin"}
                 on:delete={() => handleDeleteBook(book["_id"])}
+                on:update={()=>handelUpdateBook(book["_id"], book)}
             />
         {/each}
     </div>
+
+<Modal title="Terms of Service" bind:open={modal} autoclose>
+    <form onsubmit={aggiornaLibro}>
+        <div>
+            <Label for="titolo">Titolo:</Label>
+            <Input id="titolo" bind:value={newToUpdateBook.titolo} />
+        </div>
+
+        <div>
+            <Label for="autore">Autore:</Label>
+            <Input id="autore" bind:value={newToUpdateBook.autore} />
+        </div>
+
+        <div>
+            <Label for="casa_editrice">Casa Editrice:</Label>
+            <Input id="casa_editrice" bind:value={newToUpdateBook.casa_editrice} />
+        </div>
+    <button type="submit">Aggiorna</button>
+  </form>
+  {#snippet footer()}
+    <Button onclick={() => alert('Handle "success"')}>Conferma</Button>
+    <Button color="alternative">Annulla</Button>
+  {/snippet}
+</Modal>
+
 </div>
+
+
+

@@ -7,15 +7,15 @@
   // Definizione dei campi da inviare al backend
   const campi = [
     { key: '_id', label: 'ID', type: 'number', required: true },
-    { key: 'collocazione', label: 'Collocazione', type: 'text', required: true },
-    { key: 'Autore', label: 'Autore', type: 'text', required: true },
-    { key: 'Titolo', label: 'Titolo', type: 'text', required: true },
-    { key: 'Lingua', label: 'Lingua', type: 'text', required: true },
-    { key: 'CDD', label: 'CDD', type: 'text', required: false },
-    { key: 'Note', label: 'Note', type: 'text', required: false },
-    { key: 'Casa editrice', label: 'Casa Editrice', type: 'text', required: false },
-    { key: 'Prestabile', label: 'Prestabile', type: 'text', required: false },
-    { key: 'Argomenti', label: 'Argomenti', type: 'text', required: false }
+    { key: 'collocazione', label: 'collocazione', type: 'text', required: true },
+    { key: 'autore', label: 'autore', type: 'text', required: true },
+    { key: 'titolo', label: 'titolo', type: 'text', required: true },
+    { key: 'lingua', label: 'lingua', type: 'text', required: true },
+    { key: 'cdd', label: 'cdd', type: 'text', required: false },
+    { key: 'note', label: 'note', type: 'text', required: false },
+    { key: 'casa_editrice', label: 'casa_editrice', type: 'text', required: false },
+    { key: 'prestabile', label: 'prestabile', type: 'text', required: false },
+    { key: 'argomenti', label: 'argomenti', type: 'text', required: false }
   ];
 
   let book = {};
@@ -65,6 +65,7 @@
         }
       } else {
         error = data.message || 'Errore durante l\'aggiunta del libro';
+        console.error('Errore:', error);
       }
     } catch (err) {
       console.error(err);
@@ -84,7 +85,7 @@
     <p class="text-green-500">{successMessage}</p>
   {/if}
 
-  <form on:submit|preventDefault={handleSubmit}>
+  <form onsubmit={handleSubmit}>
     {#each campi as campo}
       <div class="mb-4">
         <Label for={campo.key}>

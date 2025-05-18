@@ -112,23 +112,23 @@ app.get("/books" ,auth, async (req, res) => {
             // }
 
             if (autore) {
-                filter["Autore"] = autore; // aggiungi il filtro per autore se autore è fornita
+                filter["autore"] = autore; // aggiungi il filtro per autore se autore è fornita
             }
             if (titolo) {
-                filter["Titolo"] = titolo; // aggiungi il filtro per Titolo se Titolo è fornita
+                filter["titolo"] = titolo; // aggiungi il filtro per Titolo se Titolo è fornita
             }
             if (lingua) {
-                filter["Lingua"] = lingua; // aggiungi il filtro per Lingua se Lingua è fornita
+                filter["lingua"] = lingua; // aggiungi il filtro per Lingua se Lingua è fornita
             }
             if (stato) {
-                filter["Stato"] = stato; // aggiungi il filtro per Stato se Stato è fornita
+                filter["stato"] = stato; // aggiungi il filtro per Stato se Stato è fornita
             }
 
             if (collocazione) {
-                filter["Collocazione"] = collocazione; // aggiungi il filtro per Collocazione se Collocazione è fornita
+                filter["collocazione"] = collocazione; // aggiungi il filtro per Collocazione se Collocazione è fornita
             }
             if (prestabile) {
-                filter["Prestabile"] = prestabile; // aggiungi il filtro per Prestabile se Prestabile è fornita
+                filter["prestabile"] = prestabile; // aggiungi il filtro per Prestabile se Prestabile è fornita
             }
 
         console.log(filter); // logga il filtro per vedere cosa contiene
@@ -169,7 +169,7 @@ app.post("/addBook",authAdmin, async (req, res) => {
             return res.status(400).json({message: 'Oggetto libro non valido o vuoto'});
         }
 
-        const fields = ["CDD", "Note", "Prestabile", "Stato", "argomenti"]; // array con i campi del libro non obbligatori
+        const fields = ["cdd", "note", "prestabile", "stato", "argomenti"]; // array con i campi del libro non obbligatori
 
         fields.forEach(element => {
             if(book[element] === undefined) {
@@ -185,13 +185,13 @@ app.post("/addBook",authAdmin, async (req, res) => {
          if(!book.collocazione){
             return res.status(400).json({message: "collocazione non fornita"})
         }
-         if(!book.Autore){
+         if(!book.autore){
             return res.status(400).json({message: "autore del libro non fornto"})
         }
-         if(!book.Titolo){
+         if(!book.titolo){
             return res.status(400).json({message: "titolo del libro non fornito"})
         }
-         if(!book.Lingua){
+         if(!book.lingua){
             return res.status(400).json({message: "lingua del libro non fornito"})
         }
 

@@ -49,16 +49,16 @@ I parametri facoltativi possono non essere messi, quelli obbligatori no.
 ```json 
 {
   "_id": 5, // obbligatorio, rappresenta il codice di inventario, sarà l'admin a passarlo direttamente al server (l'id non verrò generato da mongodb)
-  "CDD": "371.9 BUR", // facoltativo
-  "Collocazione": "letteratura italiana", // obbligatorio
-  "Autore": "WELLINGTON; Jean e C.Burleigh", // obbligatorio
-  "Titolo": "Cattivo Rendimento", // obbligatorio
-  "Note": "", // facoltativo
-  "Stato": "prestabile", // facoltativo
-  "CasaEditrice": "La Nuova Italia Editrice", // facoltativo
-  "Prestabile": "TRUE", //facoltativo
-  "Lingua": "it", //obbligatorio
-  "Argomenti": "Psicologia; motivazione; produttività; educazione" //facoltativo
+  "cdd": "371.9 BUR", // facoltativo
+  "collocazione": "letteratura italiana", // obbligatorio
+  "cutore": "WELLINGTON, Jean e C.Burleigh", // obbligatorio
+  "titolo": "Cattivo Rendimento", // obbligatorio
+  "note": "", // facoltativo
+  "stato": "prestabile", // facoltativo
+  "casa_editrice": "La Nuova Italia Editrice", // facoltativo
+  "prestabile": "TRUE", //facoltativo
+  "lingua": "it", //obbligatorio
+  "argomenti": "Psicologia, motivazione, produttività, educazione" //facoltativo
 }
 ```
 
@@ -81,9 +81,9 @@ il body della richiesta sarà quindi così formato:
 {
   "id": 4,
   "update": {
-    "Stato": "non disponibile",
-    "Titolo": "Cattivo Rendimento (Edizione Rivisitata)",
-    "Lingua": "italiano"
+    "stato": "non disponibile",
+    "titolo": "Cattivo Rendimento (Edizione Rivisitata)",
+    "lingua": "italiano"
   }
 }
 ```
@@ -99,7 +99,7 @@ l'id può essere sia una stringa che un numero
 
 ### la tabella per i books sarà così formata
 
-| _id | CDD        | Collocazione | Autore                               | Titolo                                 | Note | Stato      | Casa editrice           | Prestabile | lingua     | argomenti   |
+| _id | cdd       | collocazione | autore                               | titolo                                 | note | stato      | casa_editrice           | prestabile | lingua     | argomenti   |
 |--------------|------------|--------------|---------------------------------------|----------------------------------------|------|------------|--------------------------|------------|---------------|--------------|
 | 22           | 671.36 CON | Scienze pure | ASSOCIAZIONE ITALIANA DI METALLURGIA | Convegno nazionale trattamenti termici |      | Prestabile | ASS.ITALIANA METALLURGIA | VERO       |  italiana| Metallurgia  |
 

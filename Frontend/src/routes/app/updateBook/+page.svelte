@@ -48,12 +48,6 @@
 
 <h1>Aggiorna libro</h1>
 
-<div>
-  <label for="bookId">ID libro:</label>
-  <input id="bookId" bind:value={bookId} />
-  <button on:click={caricaLibro}>Carica dati</button>
-</div>
-
 {#if loading}
   <p>Caricamento in corso...</p>
 {/if}

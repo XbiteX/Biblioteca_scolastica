@@ -15,7 +15,17 @@
 
     let books = $state(); //array contenente i libri
 
-    let newToUpdateBook = $state(); // libro contenente i dati nuovi del libro da aggiornare
+    let newToUpdateBook = $state({
+        titolo: "",
+        autore: "",
+        casa_editrice: "",
+        // collocazione: "",
+        // cdd: "",
+        // note: "",
+        // lingua: "",
+        // prestabile: "FALSE",
+        // argomenti: "",
+    }); // libro contenente i dati nuovi del libro da aggiornare
     let toUpdateBook = $state(); // libro contenente i dati vecchi del libro da aggiornare (da passare al modale per far vedere la differenza tra quelli vecchi e quelli nuovi)
 
     let modal = $state(false); // se è == true mostra il modale
@@ -139,41 +149,23 @@
     }
 
 
-    async function handelUpdateBook(bookID, book) {
-        console.log(bookID);
-
+    async function handelUpdateBook(book) {
         modal = true 
         toUpdateBook = book;
-
-        // try {
-        //     const response = await fetch('https://bookstoreonline.onrender.com/updateBook', {
-        //         method: 'PATCH',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Authorization': `Bearer ${localStorage.getItem('token')}`
-        //         },
-        //         body: JSON.stringify({ id: bookID })
-        //     });
-
-        //     const data = await response.json();
-        //     console.log(data);
-
-        //     if (response.ok) {
-        //         alert('Libro aggiornato con successo');
-        //         await fetchBooks(); // aggiorna la lista dei libri
-        //     } else {
-        //         alert(data.message || 'Errore durante l\'aggiornamento.');
-        //     }
-        // } catch (err) {
-        //     alert('Errore di rete o del server.');
-        //     console.error(err);
-        // }
     }
 
     async function aggiornaLibro() {
         console.log(toUpdateBook);
-        console.log(toUpdateBookData);
+        console.log(newToUpdateBook);
 
+
+        const finalUpdate = { // per evitare di inviare i campi vuoti al server
+            titolo: newToUpdateBook.titolo || toUpdateBook.titolo,
+            autore: newToUpdateBook.autore || toUpdateBook.autore,
+            casa_editrice: newToUpdateBook.casa_editrice || toUpdateBook.casa_editrice,
+        }; //sarebbe un pò da sistemare, ma per ora va bene così
+
+        console.log("oggetto finale", finalUpdate);
         try {
             const response = await fetch('https://bookstoreonline.onrender.com/updateBook', {
                 method: 'PATCH',
@@ -181,7 +173,7 @@
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ id: bookID, update: toUpdateBookData })
+                body: JSON.stringify({ id: toUpdateBook._id, update: finalUpdate })
             });
 
             const data = await response.json();
@@ -190,6 +182,11 @@
             if (response.ok) {
                 alert('Libro aggiornato con successo');
                 modal = false;
+                newToUpdateBook = {
+                    titolo: "",
+                    autore: "",
+                    casa_editrice: "",
+                }; // resetto i campi del form
                 await fetchBooks(); // aggiorna la lista dei libri
             } else {
                 alert(data.message || 'Errore durante l\'aggiornamento.');
@@ -252,32 +249,32 @@
             <BookCard
                 {...book}
                 isAdmin={ruolo === "admin"}
-                on:delete={() => handleDeleteBook(book["_id"])}
-                on:update={()=>handelUpdateBook(book["_id"], book)}
+                on:delete={() => handleDeleteBook(book._id)}
+                on:update={()=>handelUpdateBook(book)}
             />
         {/each}
     </div>
 
-<Modal title="Terms of Service" bind:open={modal} autoclose>
-    <form onsubmit={aggiornaLibro}>
+<Modal title="modifica il libro" bind:open={modal} autoclose>
+    <form> <!-- on:submit|preventDefault={aggiornaLibro} è deprecato, e onsubmit non previene il comportamento di ricarica della pagina, quindi aggiornalibro verrà chiamata in un pulsante-->
         <div>
             <Label for="titolo">Titolo:</Label>
-            <Input id="titolo" bind:value={newToUpdateBook.titolo} />
+            <Input id="titolo" bind:value={newToUpdateBook.titolo} placeholder={toUpdateBook.titolo}/>
         </div>
 
         <div>
             <Label for="autore">Autore:</Label>
-            <Input id="autore" bind:value={newToUpdateBook.autore} />
+            <Input id="autore" bind:value={newToUpdateBook.autore} placeholder={toUpdateBook.autore}/>
         </div>
 
         <div>
             <Label for="casa_editrice">Casa Editrice:</Label>
-            <Input id="casa_editrice" bind:value={newToUpdateBook.casa_editrice} />
+            <Input id="casa_editrice" bind:value={newToUpdateBook.casa_editrice} placeholder={toUpdateBook.casa_editrice}/>
         </div>
-    <button type="submit">Aggiorna</button>
   </form>
+
   {#snippet footer()}
-    <Button onclick={() => alert('Handle "success"')}>Conferma</Button>
+    <Button onclick={aggiornaLibro}>Conferma</Button>
     <Button color="alternative">Annulla</Button>
   {/snippet}
 </Modal>

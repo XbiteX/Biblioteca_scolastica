@@ -2,7 +2,7 @@
 questo è un progetto scolastico per gestire una biblioteca
 
 il deployment del [database](#database) è stato fatto con [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)  
-il deployment del [backend](./backend/README.md) è stato fatto con Render al [link](https://bookstoreonline.onrender.com/)  
+il deployment del [backend](./backend/readme.md) è stato fatto con Render al [link](https://bookstoreonline.onrender.com/)  
 il deployment del [frontend](./Frontend/README.md) è stato fatto con Vercel al [link](https://biblioteca-scolastica.vercel.app)  
 
 ## Database

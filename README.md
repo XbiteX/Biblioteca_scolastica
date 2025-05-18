@@ -1,14 +1,30 @@
 # Libreria scolastica
 questo è un progetto scolastico per gestire una biblioteca
 
+il deployment del [databasa](#databasa) è stato fatto con [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)  
+il deployment del [backend](#backend) è stato fatto con Render al [link](https://bookstoreonline.onrender.com/)  
+il deployment del [frontend](#frontend) è stato fatto con Vercel al [link](https://biblioteca-scolastica.vercel.app)  
 
-il deployment del backend è stato fatto con render
+## Database
+### il database si compone di 3 collection (o tabelle) 
 
+### users
 
+|isa|password|nome|cognome|ruolo|
+|---|--------|----|-------|-----|
+|12345678|password|marco|rossi|student|
 
+l'attributo ruolo può essere student o admin, l'utente con admin avrà particolari privilegi che sono descritti più avanti
+Le credenziali dell'admin sono
+- isa: 1
+- password: passwordAdmin
 
+### bookings
 
-## rotte:
+la tabella bookings è work in progess
+
+## Backend
+
 ### /login 
 serve agli utenti per autenticarsi, prima di accedere alla "biblioteca online" devono autenticarsi
 per atenticarsi bisogna fare un POST verso https://bookstoreonline.onrender.com/login 
@@ -90,19 +106,10 @@ il body della richiesta sarà quindi così formato:
 solo i parametri che vengono specificati nell'oggetto "update" andranno aggiornati
 l'id può essere sia una stringa che un numero
 
-# tabelle
-### la tabella degli users sarà così formata
-
-|isa|password|nome|cognome|ruolo|
-|---|--------|----|-------|-----|
-|12345678|password|marco|rossi|studente|
-
-### la tabella per i books sarà così formata
-
-| _id | cdd       | collocazione | autore                               | titolo                                 | note | stato      | casa_editrice           | prestabile | lingua     | argomenti   |
-|--------------|------------|--------------|---------------------------------------|----------------------------------------|------|------------|--------------------------|------------|---------------|--------------|
-| 22           | 671.36 CON | Scienze pure | ASSOCIAZIONE ITALIANA DI METALLURGIA | Convegno nazionale trattamenti termici |      | Prestabile | ASS.ITALIANA METALLURGIA | VERO       |  italiana| Metallurgia  |
 
 
-"argomenti" indica di cosa tratta quel libro (es. guerra, fisica, metallurgia, poetica...)
-_id rappresenta il codice di inventario di quel libro
+
+
+
+
+## frontend:

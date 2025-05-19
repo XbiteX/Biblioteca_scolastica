@@ -18,6 +18,7 @@
       autore: "",
       casa_editrice: "",
     };
+    
     let toUpdateBook = null;
     let modal = false;
     let ruolo = null;

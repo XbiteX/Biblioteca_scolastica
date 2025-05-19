@@ -24,6 +24,7 @@
       } else {
         localStorage.setItem('token', data.token);
         localStorage.setItem('ruolo', data.ruolo);
+        localStorage.setItem('isa', data.isa);
         window.location.href = '/app/dashboard';
       }
     } catch (err) {

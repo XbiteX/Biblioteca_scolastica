@@ -3,7 +3,9 @@
 ## /login 
 -> permessi admin: non richesti  
 -> metodo: **POST**  
--> rotta: **https://bookstoreonline.onrender.com/login**  
+-> rotta: **https://bookstoreonline.onrender.com/login** 
+-> body: **SI** 
+-> autenticazione: non richiesta
 
 serve agli utenti per autenticarsi prima di accedere alla "biblioteca online".
 
@@ -34,6 +36,9 @@ body della risposta:
 -> permssi admin: non richiesti 
 -> metodo: **GET**  
 -> rotta: **https://bookstoreonline.onrender.com/books**
+-> body: **NO**
+-> autenticazione: **richiesta**
+
 
 ritorna i libri in base a nessuno, uno o più filtri.
 
@@ -51,8 +56,11 @@ poi c'è anche un ordinamento:
 
 ## /addBook
 -> permessi admin: **richiesti**
--> metodo: **post**
+-> metodo: **POST**
 -> rotta: **https://bookstoreonline.onrender.com/addBook**
+-> body: **SI**
+-> autenticazione: **richiesta**
+
  
 permette di aggiungere un libro specifico, i parametri obbligatori sono l'id la collocazione, l'autore, la lingua e il titolo.
 I parametri facoltativi possono non essere messi, quelli obbligatori no.
@@ -75,10 +83,13 @@ I parametri facoltativi possono non essere messi, quelli obbligatori no.
 ```
 
 
-### /deleteBook
+## /deleteBook
 -> permessi admin: **richiesti**
--> metodo: delete
+-> metodo: **DELETE**
 -> rotta: **https://bookstoreonline.onrender.com/addBook**
+-> body: **SI**
+-> autenticazione: **richiesta**
+
 
 permette all'admin di eliminare un libro specifio, i parametri necessari sono l'id, il corpo della richiesta sarà così formato:
 
@@ -89,10 +100,13 @@ permette all'admin di eliminare un libro specifio, i parametri necessari sono l'
 ```
 l'id può essere sia una stringa che un numero
 
-### /updateBook
+## /updateBook
 -> permessi admin: **richiesti**
--> metodo: **patch**
+-> metodo: **PATCH**
 -> rotta: **https://bookstoreonline.onrender.com/updateBook**
+-> body: **SI**
+-> autenticazione: **richiesta**
+
 
 permette di aggiornare un libro specifio, i parametri necessari sono l'id del libro ed un'oggetto dove si specificano i campi da modificare e i loro corrispettivi valori.
 il body della richiesta sarà quindi così formato:
@@ -111,10 +125,13 @@ da notare che i nomi dei campi dell'oggetto update devono corrispondere coi nomi
 
 solo i parametri che vengono specificati nell'oggetto "update" andranno aggiornati
 
-### /reserveBook
+## /reserveBook
 -> permessi admin: non richiesti
--> metodo: **post**
+-> metodo: **POST**
 -> rotta: **https://bookstoreonline.onrender.com/reserveBook**
+-> body: **SI**
+-> autenticazione: **richiesta**
+
 
 permette di prendere in prestito un libro specifio, i parametri necessari sono l'id del libro, il codice isa dell'utente e le date di inizio e fine prestito.
 il body della richiesta sarà quindi così formato:
@@ -122,12 +139,23 @@ il body della richiesta sarà quindi così formato:
 {
   "user_id": 4,
   "book_id": 4,
-  "data_inizio": 2025/05/06,
-  "data_fine": 2025/05/13,
+  "data_inizio": 2025-05-06,
+  "data_fine": 2025-05-13,
 }
 ```
 
 da notare che i nomi dei campi dell'oggetto update devono corrispondere coi nomi dei campi dei libri nella collection "reserveBook".
+
+## /justVerifyToken
+-> permessi admin: non richiesti
+-> metodo: **GET**
+-> rotta: **https://bookstoreonline.onrender.com/justVerifyToken**
+-> body: NO
+-> autenticazione: **richiesta**
+
+permette al client di verificare che il suo token sia valido.  
+questa rotta serve perchè capitava che nel loclastorage del client c'era un token scaduto (perchè magari ha fatto l'accesso in passato), però il token effettivamente c'era e quindi l'utente
+veniva rindirizzato alla dashboard dove cercava di fare delle richieste con un token scaduto, che ovviamente non andavano a buon fine e quindi l'utente doveva manualmente ritornare a /login
 
 
 

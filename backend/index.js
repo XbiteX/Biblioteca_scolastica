@@ -77,7 +77,8 @@ app.post("/login", async (req,res)=>{
             success:true,
             token:token,
             message: "token generato con successo",
-            ruolo: user.ruolo
+            ruolo: user.ruolo,
+            isa: user.isa,
         })
     }catch(error) {
         console.error(error);
@@ -296,7 +297,7 @@ app.patch("/updateBook",authAdmin, async (req, res) => {
 });
  
 //rotta per prenotare un libro
-app.post("/reserveBook", async(req,res) => {
+app.post("/reserveBook", async (req,res) => {
     if(!database) {
         return res.status(500).json({message: 'Internal server error'});
     }
@@ -344,3 +345,11 @@ app.post("/reserveBook", async(req,res) => {
         return res.status(500).json({message: 'Internal error'});
         }
     });
+
+// rotta solamente per verificare che il token sia valido (punto 3 della todo list)
+app.get("/justVerifyToken", auth, async (req, res)=>{
+    if(!database) {
+        return res.status(500).json({message: "internal server error"})
+    }
+    return res.status(200).json({message: "token valido"})
+})

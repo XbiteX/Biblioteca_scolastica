@@ -1,285 +1,266 @@
-<!-- qua verranno visualizzati i libri -->
 <script>
     import { onMount } from "svelte";
     import BookCard from "$lib/components/bookCard.svelte";
     import { Toggle, Modal, Button, Input, Label } from "flowbite-svelte";
-
-    // questi sono i parametri che verranno utilizzati per fare la query al server
-    let ordinamento = $state(); // se è == "Titolo" ordina per titolo
-    let autore = $state();
-    let titolo = $state();
-    let lingua = $state();
-    let stato = $state();
-    let collocazione = $state();
-    let prestabile = $state();
-
-    let books = $state(); //array contenente i libri
-
-    let newToUpdateBook = $state({
-        titolo: "",
-        autore: "",
-        casa_editrice: "",
-        // collocazione: "",
-        // cdd: "",
-        // note: "",
-        // lingua: "",
-        // prestabile: "FALSE",
-        // argomenti: "",
-    }); // libro contenente i dati nuovi del libro da aggiornare
-    let toUpdateBook = $state(); // libro contenente i dati vecchi del libro da aggiornare (da passare al modale per far vedere la differenza tra quelli vecchi e quelli nuovi)
-
-    let modal = $state(false); // se è == true mostra il modale
-
-    let ruolo =$state(); // il ruolo dell'utente (admin o student)
-
+  
+    let ordinamento;
+    let autore;
+    let titolo;
+    let lingua;
+    let stato;
+    let collocazione;
+    let prestabile;
+  
+    let books = [];
+  
+    let newToUpdateBook = {
+      titolo: "",
+      autore: "",
+      casa_editrice: "",
+    };
+    let toUpdateBook = null;
+    let modal = false;
+    let ruolo = null;
+  
     async function fetchBooks() {
-        let params = new URLSearchParams();
-
-        if (ordinamento) params.append("ordinamento", ordinamento);
-        if (autore) params.append("autore", autore);
-        if (titolo) params.append("titolo", titolo);
-        if (lingua) params.append("lingua", lingua);
-        if (stato) params.append("stato", stato);
-        if (collocazione) params.append("collocazione", collocazione);
-        if (prestabile) params.append("prestabile", prestabile);
-
-        console.log(
-            `https://bookstoreonline.onrender.com/books?${params.toString()}`,
-        );
-
-        const url = `https://bookstoreonline.onrender.com/books?${params.toString()}`;
-        console.log(params.toString());
-
-
-        const risposta = await fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-        });
-        if (!risposta.ok) {
-            const errorData = await risposta.json();
-            console.error(
-                "Errore durante il recupero dei libri:",
-                errorData.message,
-            );
-            return;
-        }
-        books = await risposta.json();
+      let params = new URLSearchParams();
+  
+      if (ordinamento) params.append("ordinamento", ordinamento);
+      if (autore) params.append("autore", autore);
+      if (titolo) params.append("titolo", titolo);
+      if (lingua) params.append("lingua", lingua);
+      if (stato) params.append("stato", stato);
+      if (collocazione) params.append("collocazione", collocazione);
+      if (prestabile) params.append("prestabile", prestabile);
+  
+      const url = `https://bookstoreonline.onrender.com/books?${params.toString()}`;
+  
+      const risposta = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+  
+      if (!risposta.ok) {
+        const errorData = await risposta.json();
+        console.error("Errore durante il recupero dei libri:", errorData.message);
+        return;
+      }
+  
+      books = await risposta.json();
     }
-    
-
-    // questa funzione viene chiamata quando la pagina viene caricata e carica tutti i libri (senza alcun filtro essendo che all'inizio i parametri sono undefined)
+  
     onMount(async () => {
-        if (!localStorage.getItem("token")) {
-            window.location.href = "/app/login";
-        }
-
-        ruolo = localStorage.getItem("ruolo");
-        console.log(localStorage.getItem("token"));
-
-        const response = await fetchBooks();
+      if (!localStorage.getItem("token")) {
+        window.location.href = "/app/login";
+      }
+  
+      ruolo = localStorage.getItem("ruolo");
+      await fetchBooks();
     });
-
+  
     async function sortBooks() {
-        ordinamento = "Titolo";
-        const response = await fetchBooks();
+      ordinamento = "Titolo";
+      await fetchBooks();
     }
-
+  
     async function toogleAvailable() {
-        prestabile = prestabile === undefined ? "TRUE" : "FALSE";
-        const response = await fetchBooks();
+      prestabile = prestabile === undefined || prestabile === "FALSE" ? "TRUE" : "FALSE";
+      await fetchBooks();
     }
-
+  
     async function toogleTopic(event) {
-        collocazione = event.target.value;
-        console.log(collocazione);
-        const response = await fetchBooks();
+      collocazione = event.target.value;
+      await fetchBooks();
     }
-
+  
     async function resetQuery() {
-        ordinamento = undefined;
-        autore = undefined;
-        titolo = undefined;
-        lingua = undefined;
-        stato = undefined;
-        collocazione = undefined;
-        prestabile = undefined;
-
-        const response = await fetchBooks();
+      ordinamento = undefined;
+      autore = undefined;
+      titolo = undefined;
+      lingua = undefined;
+      stato = undefined;
+      collocazione = undefined;
+      prestabile = undefined;
+  
+      await fetchBooks();
     }
-
+  
     async function handleDeleteBook(bookID) {
-        console.log(bookID);
-        if (!bookID) {
-            alert('ID libro non valido');
-            return;
+      if (!bookID) {
+        alert("ID libro non valido");
+        return;
+      }
+  
+      if (!confirm("Sei sicuro di voler eliminare questo libro?")) {
+        return;
+      }
+  
+      try {
+        const response = await fetch("https://bookstoreonline.onrender.com/deleteBook", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ id: bookID }),
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          alert("Libro eliminato con successo");
+          await fetchBooks();
+        } else {
+          alert(data.message || "Errore durante l'eliminazione.");
         }
-
-        //questa parte è un pò problematica
-        if (!confirm('Sei sicuro di voler eliminare questo libro?')) {
-            return;
-        }
-        // fine parte problematica
-
-        try {
-            const response = await fetch('https://bookstoreonline.onrender.com/deleteBook', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({ id: bookID })
-            });
-
-            const data = await response.json();
-            console.log(data);
-
-            if (response.ok) {
-                alert('Libro eliminato con successo');
-                await fetchBooks(); // aggiorna la lista dei libri
-            } else {
-                alert(data.message || 'Errore durante l\'eliminazione.');
-            }
-        } catch (err) {
-            alert('Errore di rete o del server.');
-            console.error(err);
-        }
+      } catch (err) {
+        alert("Errore di rete o del server.");
+        console.error(err);
+      }
     }
-
-
+  
     async function handelUpdateBook(book) {
-        modal = true 
-        toUpdateBook = book;
+      modal = true;
+      toUpdateBook = book;
     }
-
+  
     async function aggiornaLibro() {
-        console.log(toUpdateBook);
-        console.log(newToUpdateBook);
-
-
-        const finalUpdate = { // per evitare di inviare i campi vuoti al server
-            titolo: newToUpdateBook.titolo || toUpdateBook.titolo,
-            autore: newToUpdateBook.autore || toUpdateBook.autore,
-            casa_editrice: newToUpdateBook.casa_editrice || toUpdateBook.casa_editrice,
-        }; //sarebbe un pò da sistemare, ma per ora va bene così
-
-        console.log("oggetto finale", finalUpdate);
-        try {
-            const response = await fetch('https://bookstoreonline.onrender.com/updateBook', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({ id: toUpdateBook._id, update: finalUpdate })
-            });
-
-            const data = await response.json();
-            console.log(data);
-
-            if (response.ok) {
-                alert('Libro aggiornato con successo');
-                modal = false;
-                newToUpdateBook = {
-                    titolo: "",
-                    autore: "",
-                    casa_editrice: "",
-                }; // resetto i campi del form
-                await fetchBooks(); // aggiorna la lista dei libri
-            } else {
-                alert(data.message || 'Errore durante l\'aggiornamento.');
-            }
-        } catch (err) {
-            alert('Errore di rete o del server.');
-            console.error(err);
+      const finalUpdate = {
+        titolo: newToUpdateBook.titolo || toUpdateBook.titolo,
+        autore: newToUpdateBook.autore || toUpdateBook.autore,
+        casa_editrice: newToUpdateBook.casa_editrice || toUpdateBook.casa_editrice,
+      };
+  
+      try {
+        const response = await fetch("https://bookstoreonline.onrender.com/updateBook", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ id: toUpdateBook._id, update: finalUpdate }),
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          alert("Libro aggiornato con successo");
+          modal = false;
+          newToUpdateBook = { titolo: "", autore: "", casa_editrice: "" };
+          await fetchBooks();
+        } else {
+          alert(data.message || "Errore durante l'aggiornamento.");
         }
+      } catch (err) {
+        alert("Errore di rete o del server.");
+        console.error(err);
+      }
     }
-</script>
-
-<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-    <div
-        class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white shadow rounded-lg"
-    >
-        <input
-            type="text"
-            placeholder="Cerca titolo..."
-            class="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-
-        <select
-            onchange={toogleTopic}
-            class="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-            <option value="">Tutte le categorie</option>
-            <option value="arti e linguaggi">arti e linguaggi</option>
-            <option value="tecnologia">tecnologie</option>
-            <option value="letteratura italiana">letteratura italiana</option>
-            <option value="scienze pure">scienze pure</option>
-            <option value="tecnologia">tecnologie</option>
-            <option value="geografia e storia">geografia e storia</option>
-        </select>
-
+  </script>
+  
+  <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white shadow-none rounded-lg max-w-7xl w-full">
+      <input
+        type="text"
+        placeholder="Cerca titolo..."
+        class="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        bind:value={titolo}
+        oninput={fetchBooks}
+      />
+  
+      <select
+        onchange={toogleTopic}
+        class="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">Tutte le categorie</option>
+        <option value="arti e linguaggi">arti e linguaggi</option>
+        <option value="tecnologia">tecnologia</option>
+        <option value="letteratura italiana">letteratura italiana</option>
+        <option value="scienze pure">scienze pure</option>
+        <option value="geografia e storia">geografia e storia</option>
+      </select>
+  
+      <button
+        onclick={sortBooks}
+        class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+      >
+        Ordina alfabeticamente
+      </button>
+  
+      <Toggle on:change={toogleAvailable}>disponibile</Toggle>
+  
+      <button
+        onclick={resetQuery}
+        class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition"
+      >
+        Reset
+      </button>
+  
+      {#if ruolo === "admin"}
         <button
-            onclick={sortBooks}
-            class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-            >Ordina alfabeticamente</button
+          onclick={() => (window.location.href = "/app/addBook")}
+          class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
         >
-
-        <Toggle on:change={toogleAvailable}>disponibile</Toggle>
-
-        <button onclick={resetQuery} class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition">Reset</button>
-        
-
-        {#if ruolo === 'admin'}
-        <button
-            onclick={() => window.location.href = '/app/addBook'}
-            class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-        >
-            Aggiungi Libro
+          Aggiungi Libro
         </button>
-        {/if}
-
+      {/if}
     </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
-        {#each books as book}
-        {console.log(book)}
-            <BookCard
-                {...book}
-                isAdmin={ruolo === "admin"}
-                on:delete={() => handleDeleteBook(book._id)}
-                on:update={()=>handelUpdateBook(book)}
-            />
-        {/each}
+  
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4 max-w-7xl w-full"
+    >
+      {#each books as book}
+        <div
+          class="min-h-[400px] flex flex-col border rounded-lg shadow-lg bg-white overflow-visible"
+        >
+          <BookCard
+            {...book}
+            isAdmin={ruolo === "admin"}
+            ondelete={() => handleDeleteBook(book._id)}
+            onupdate={() => handelUpdateBook(book)}
+            class="flex-grow flex flex-col"
+          />
+        </div>
+      {/each}
     </div>
-
-<Modal title="modifica il libro" bind:open={modal} autoclose>
-    <form> <!-- on:submit|preventDefault={aggiornaLibro} è deprecato, e onsubmit non previene il comportamento di ricarica della pagina, quindi aggiornalibro verrà chiamata in un pulsante-->
+  
+    <Modal title="Modifica il libro" bind:open={modal} autoclose>
+      <form>
         <div>
-            <Label for="titolo">Titolo:</Label>
-            <Input id="titolo" bind:value={newToUpdateBook.titolo} placeholder={toUpdateBook.titolo}/>
+          <Label for="titolo">Titolo:</Label>
+          <Input
+            id="titolo"
+            bind:value={newToUpdateBook.titolo}
+            placeholder={toUpdateBook?.titolo}
+          />
         </div>
-
+  
         <div>
-            <Label for="autore">Autore:</Label>
-            <Input id="autore" bind:value={newToUpdateBook.autore} placeholder={toUpdateBook.autore}/>
+          <Label for="autore">Autore:</Label>
+          <Input
+            id="autore"
+            bind:value={newToUpdateBook.autore}
+            placeholder={toUpdateBook?.autore}
+          />
         </div>
-
+  
         <div>
-            <Label for="casa_editrice">Casa Editrice:</Label>
-            <Input id="casa_editrice" bind:value={newToUpdateBook.casa_editrice} placeholder={toUpdateBook.casa_editrice}/>
+          <Label for="casa_editrice">Casa Editrice:</Label>
+          <Input
+            id="casa_editrice"
+            bind:value={newToUpdateBook.casa_editrice}
+            placeholder={toUpdateBook?.casa_editrice}
+          />
         </div>
-  </form>
-
-  {#snippet footer()}
-    <Button onclick={aggiornaLibro}>Conferma</Button>
-    <Button color="alternative">Annulla</Button>
-  {/snippet}
-</Modal>
-
-</div>
-
-
-
+      </form>
+  
+      {#snippet footer()}
+        <Button onclick={aggiornaLibro}>Conferma</Button>
+        <Button color="alternative" onclick={() => (modal = false)}>Annulla</Button>
+      {/snippet}
+    </Modal>
+  </div>
+  

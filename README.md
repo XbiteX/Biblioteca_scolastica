@@ -55,7 +55,21 @@ Le credenziali dell'admin sono
 - isa: 1
 - password: passwordAdmin
 
-### bookings
+### books
+
+| _id      | argomenti                                               | autore                          | casa_editrice              | cdd      | collocazione        | lingua    | note | prestabile | stato        | titolo                                      |
+|----------|---------------------------------------------------------|---------------------------------|----------------------------|----------|---------------------|----------|------|------------|--------------|---------------------------------------------|
+| 4        | Psicologia, motivazione, produttività, performance, educazione, crescita personale | WELLINGTON, Jean e C.Burleigh  | La Nuova Italia Editrice   | 371.9 BUR | letteratura italiana | italiano |      | TRUE       | Disponibile  | Cattivo Rendimento (Edizione Rivisitata)    |
+
+
+### reserveBook
+
+| _id                        | data_inizio | data_fine   | user_isa | book_id |
+|----------------------------|-------------|-------------|----------|---------|
+| 682b0c0517e5a39aeeb0c502    | data inizio | data fine   | 3        | 29      |
+
+
+
 
 la tabella bookings è work in progess
 

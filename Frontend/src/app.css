@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @plugin 'flowbite/plugin';
 
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {

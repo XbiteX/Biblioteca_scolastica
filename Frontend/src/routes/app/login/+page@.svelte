@@ -1,4 +1,5 @@
 <script>
+  import {Label, Input, Button} from 'flowbite-svelte';
   let isa = '';
   let password = '';
   let error = '';
@@ -35,15 +36,16 @@
   }
 </script>
 
+
 <form
   on:submit|preventDefault={handleLogin}
-  class="max-w-md mx-auto mt-20 p-6 bg-white rounded-2xl shadow-lg space-y-5 border border-gray-200"
+  class="max-w-md mx-auto mt-20 p-6 bg-white dark:bg-gray-600 rounded-2xl shadow-lg space-y-5 border border-gray-200 dark:border-gray-800"
 >
-  <h2 class="text-2xl font-semibold text-center text-gray-800">Accesso Biblioteca scolastica</h2>
+  <h2 class="text-2xl font-semibold text-center text-gray-800 dark:text-white">Accesso Biblioteca scolastica</h2>
 
   <div class="space-y-1">
-    <label for="isa" class="block text-sm font-medium text-gray-700">Codice ISA</label>
-    <input
+    <Label for="isa" class="block text-sm font-medium text-gray-700 dark:text-white">Codice ISA</Label>
+    <Input
       id="isa"
       type="text"
       bind:value={isa}
@@ -54,8 +56,8 @@
   </div>
 
   <div class="space-y-1">
-    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-    <input
+    <Label for="password" class="block text-sm font-medium text-gray-700">Password</Label>
+    <Input
       id="password"
       type="password"
       bind:value={password}
@@ -69,11 +71,12 @@
     <p class="text-sm text-red-600 bg-red-100 p-2 rounded">{error}</p>
   {/if}
 
-  <button
+  <Button
     type="submit"
     class="w-full py-2 px-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50"
     disabled={loading}
   >
     {loading ? 'Accesso in corso...' : 'Accedi'}
-  </button>
+  </Button>
 </form>
+

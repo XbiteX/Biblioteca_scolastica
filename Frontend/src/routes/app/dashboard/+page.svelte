@@ -18,7 +18,7 @@
       autore: "",
       casa_editrice: "",
     };
-    
+
     let toUpdateBook = null;
     let modal = false;
     let ruolo = null;
@@ -162,7 +162,7 @@
     }
   </script>
   
-  <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+  <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
     <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white shadow-none rounded-lg max-w-7xl w-full">
       <input
         type="text"

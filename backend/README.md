@@ -111,6 +111,24 @@ da notare che i nomi dei campi dell'oggetto update devono corrispondere coi nomi
 
 solo i parametri che vengono specificati nell'oggetto "update" andranno aggiornati
 
+### /reserveBook
+-> permessi admin: non richiesti
+-> metodo: **post**
+-> rotta: **https://bookstoreonline.onrender.com/reserveBook**
+
+permette di prendere in prestito un libro specifio, i parametri necessari sono l'id del libro, il codice isa dell'utente e le date di inizio e fine prestito.
+il body della richiesta sarà quindi così formato:
+```json 
+{
+  "user_id": 4,
+  "book_id": 4,
+  "data_inizio": 2025/05/06,
+  "data_fine": 2025/05/13,
+}
+```
+
+da notare che i nomi dei campi dell'oggetto update devono corrispondere coi nomi dei campi dei libri nella collection "reserveBook".
+
 
 
 

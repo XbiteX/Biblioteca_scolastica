@@ -6,6 +6,9 @@
   let { cdd, autore, argomenti, lingua, titolo, casa_editrice, collocazione, stato, prestabile, note, isAdmin = false } = $props();
 
   const dispatch = createEventDispatcher();
+    function reserveBook(){
+    window.location.href = '/app/reserveBook';
+  }
 </script>
 
 
@@ -17,8 +20,8 @@
       <p class="mb-3 leading-tight font-normal text-gray-700 dark:text-gray-400">{argomenti}</p>
       <h3>{cdd}</h3>
 
-      {#if prestabile === "TRUE" || prestabile === true}
-        <Button class="w-40">prendi in prestito</Button>
+      {#if prestabile === true}
+        <Button class="w-40" onclick={reserveBook()}>prendi in prestito</Button>
       {:else}
         <div class="w-40 opacity-50 cursor-not-allowed select-none">non disponibile</div>
       {/if}

@@ -1,6 +1,6 @@
 # *TO DO LIST*
 
-- [ ] fare la rotta /reserveBook sul backend.
+- [X] fare la rotta /reserveBook sul backend.
     - i dettagli sono ancora da stabilire
 - [ ] sul frontend, fare una rotta verso app/reserveBook.
     - questa rotta dovrà permettere agli studenti di visualizzare i libri prenotati.
@@ -9,7 +9,7 @@
 - [ ] aggiungere gli altri campi per la modifica dei libri.
     - quando l'admin vuole modificare un libro si apre un modale con all'interno un form.
     - il form chiede solamente 3 campi
-- [ ] aggiustare il reindirizzamento verso app/dashboard:
+- [X] aggiustare il reindirizzamento verso app/dashboard:
     -  il token dopo 1h scade, ma rimane comunque nel localstorage del browser e quindi il frontend pensa di avere un token valido, ma non lo è siccome è scaduto.
     -  quindi il frontend si deve accorgere di avere un token scaduto.
     - per farlo bisogna fare una richista qualsiasi verso il server.

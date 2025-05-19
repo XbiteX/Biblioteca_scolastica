@@ -202,7 +202,7 @@ app.post("/addBook",authAdmin, async (req, res) => {
         }
         return res.status(200).json({message: 'tt ok'}); // ritorna un messaggio di successo al client
     } catch(error){
-        if (error.code === 11000) {
+        if (error.code === 11000) { // l'errore 11000 indica che l'id è già presente nel database
             return res.status(409).json({ message: 'ID già esistente nel database' });
         }
         console.error(`Internal adding book`, error);
@@ -295,53 +295,52 @@ app.patch("/updateBook",authAdmin, async (req, res) => {
     }
 });
  
-app.post("reserveBook", auth, async(req,res) => {
+//rotta per prenotare un libro
+app.post("/reserveBook", async(req,res) => {
     if(!database) {
         return res.status(500).json({message: 'Internal server error'});
     }
     try{        
         let reservation = req.body; // prendo la prenotazione dal body della richiesta
-    if(!reservation || typeof reservation !== 'object' || Object.keys(reservation).length === 0) {
-        return res.status(400).json({message: 'Oggetto prenotazione non valido o vuoto'});
-    }
+        if(!reservation || typeof reservation !== 'object' || Object.keys(reservation).length === 0) {
+            return res.status(400).json({message: 'Oggetto prenotazione non valido o vuoto'});
+        }
 
-    console.log(reservation); // logga la prenotazione per vedere cosa contiene
+        console.log(reservation); // logga la prenotazione per vedere cosa contiene
 
-    if(!reservation.book_id){
-        return res.status(400).json({message: "ID del libro non fornito"})
-    }
-     if(!reservation.user_isa){
-        return res.status(400).json({message: "Codice isa non fornito"})
-    }
-     if(!reservation.data_inizio){
-        return res.status(400).json({message: "Data di inizio non fornta"})
-    }
-     if(!reservation.data_fine){
-        return res.status(400).json({message: "Data di fine non fornita"})
-    }
+        if(!reservation.book_id){
+            return res.status(400).json({message: "ID del libro non fornito"})
+        }
+        if(!reservation.user_isa){
+            return res.status(400).json({message: "Codice isa non fornito"})
+        }
+        if(!reservation.data_inizio){
+            return res.status(400).json({message: "Data di inizio non fornta"})
+        }
+        if(!reservation.data_fine){
+            return res.status(400).json({message: "Data di fine non fornita"})
+        }
 
-    const userID = await database.collection("users").findOne(reservation.user_isa); // controllo che il codice isa fornito sia prensente nel database
-    const bookID = await database.collection("books").findOne(reservation.book_id); // controllo che il codice de libro fornito sia prensente nel database
+        const userID = await database.collection("users").findOne({... reservation.user_isa}); // controllo che il codice isa fornito sia prensente nel database
+        const bookID = await database.collection("books").findOne({... reservation.book_id}); // controllo che il codice de libro fornito sia prensente nel database
 
-    if(!userID){
-        return res.status(400).json({message:"utente non trovato"})
-    }
-    if(!bookID){
-        return res.status(400).json({message:"libro non trovato"})
-    }
+        if(!userID){
+            return res.status(400).json({message:"utente non trovato"})
+        }
+        if(!bookID){
+            return res.status(400).json({message:"libro non trovato"})
+        }
 
-    const result = await database.collection("reserveBook").insertOne(reservation); // inserisco la prenotazione nel database
+        const result = await database.collection("reserveBook").insertOne(reservation); // inserisco la prenotazione nel database
 
-    if(result.acknowledged === false) {
-        return res.status(500).json({message: 'Errore durante l\'inserimento della prenotazione'});
-    }
-    return res.status(200).json({message: 'tutto ok'}); // ritorna un messaggio di successo al client
-} catch(error){
-    if (error.code === 11000) {
-        return res.status(409).json({ message: 'ID già esistente nel database' });
-    }
-    console.error(`Internal adding reservation`, error);
-    return res.status(500).json({message: 'Internal error'});
-}
-    })
- 
+        if(result.acknowledged === false) {
+            return res.status(500).json({message: 'Errore durante l\'inserimento della prenotazione'});
+        }
+
+        return res.status(200).json({message: 'tutto ok'}); // ritorna un messaggio di successo al client
+
+    } catch(error){
+        console.error(`Internal adding reservation`, error);
+        return res.status(500).json({message: 'Internal error'});
+        }
+    });

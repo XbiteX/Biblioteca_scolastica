@@ -123,9 +123,18 @@
       }
     }
   
-    async function handelUpdateBook(book) {
+    async function handleUpdateBook(book) {
       modal = true;
       toUpdateBook = book;
+    }
+    async function handleReserveBook(bookID){
+      console.log("Chiamato handleDeleteBook con ID:", bookID);
+      if (!bookID) {
+        alert("ID libro non valido");
+        return;
+      }
+      localStorage.setItem('bookID', bookID);
+      window.location.href = "/app/reserveBook";
     }
   
     async function aggiornaLibro() {
@@ -220,8 +229,9 @@
           <BookCard
             {...book}
             isAdmin={ruolo === "admin"}
-            ondelete={() => handleDeleteBook(book._id)}
-            onupdate={() => handelUpdateBook(book)}
+            on:delete={() => handleDeleteBook(book._id)}
+            on:update={() => handleUpdateBook(book)}
+            on:reserve={() => handleReserveBook(book._id)}
             class="flex-grow flex flex-col"
           />
         </div>

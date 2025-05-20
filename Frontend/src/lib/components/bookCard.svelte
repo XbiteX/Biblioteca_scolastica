@@ -27,7 +27,7 @@
       
       <div class="flex flex-col gap-2 mb-4">
         {#if prestabile === "TRUE" || prestabile === true}
-          <Button class="w-40">prendi in prestito</Button>
+          <Button class="w-40" on:click={() =>dispatch("reserve")}>prendi in prestito</Button>
         {:else}
           <div class="w-40 opacity-50 cursor-not-allowed select-none">non disponibile</div>
         {/if}

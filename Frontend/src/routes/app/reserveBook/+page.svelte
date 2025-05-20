@@ -3,19 +3,15 @@
     let error = '';
     let successMessage = '';
     let loading = false;
-    const codice_isa = localStorage.getItem('codice_isa');
 
-  
+
     // Definizione dei campi da inviare al backend per la prenotazione
     const campi = [
-      { key: 'book_id', label: 'ID del Libro', type: 'number', required: true },
       { key: 'data_inizio', label: 'Data Inizio', type: 'date', required: true },
       { key: 'data_fine', label: 'Data Fine', type: 'date', required: true },
     ];
   
-    let reservation = {
-      user_isa : codice_isa
-    };
+    let reservation = {};
   
     function validateForm() {
       for (const campo of campi) {
@@ -30,7 +26,10 @@
   
     async function handleSubmit() {
       if (!validateForm()) return;
-  
+
+      reservation.user_isa = localStorage.getItem('codice_isa');
+      reservation.book_id = localStorage.getItem('bookID');
+
       const token = localStorage.getItem('token');
       if (!token) {
         error = 'Devi effettuare il login per prenotare un libro.';
@@ -79,7 +78,8 @@
     {#if successMessage}
       <p class="text-green-500">{successMessage}</p>
     {/if}
-  
+
+    {#if localStorage.getItem("ruolo") === "student"}
     <form on:submit|preventDefault={handleSubmit}>
       {#each campi as campo}
         <div class="mb-4">
@@ -102,5 +102,8 @@
         {/if}
       </Button>
     </form>
+    {:else}
+
+    {/if}
   </div>
   

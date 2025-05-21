@@ -13,14 +13,15 @@
     stato,
     prestabile,
     note,
-    isAdmin = false
+    isAdmin = false,
+    img
   } = $props();
 
   const dispatch = createEventDispatcher();
 </script>
 
 <div role="button"class="space-y-4" onclick={(e) =>{e.stopPropagation(); dispatch("open")}}>
-  <Card img={book.img} class="shadow-none border-0 flex flex-col min-h-[300px]" >
+  <Card {img} class="shadow-none border-0 flex flex-col min-h-[300px]" >
     <div class="m-6 flex flex-col h-full">
 
       <!-- Testo del libro -->

@@ -1,5 +1,6 @@
 <script>
   import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from "flowbite-svelte";
+  import {logout} from "$lib/index.js"
 </script>
 
 
@@ -10,10 +11,7 @@
   </NavBrand>
   <NavHamburger />
   <NavUl>
-    <NavLi href="/">Home</NavLi>
-    <NavLi href="/about">About</NavLi>
-    <NavLi href="/pricing">Pricing</NavLi>
-    <NavLi href="/contact">Contact</NavLi>
+    <NavLi onclick={logout}>Logout</NavLi>
   </NavUl>
 </Navbar>
 

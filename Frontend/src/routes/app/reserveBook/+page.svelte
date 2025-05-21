@@ -1,10 +1,14 @@
 <script>
     import { Button, Input, Label } from 'flowbite-svelte';
+    import { onMount } from 'svelte';
     let error = '';
     let successMessage = '';
     let loading = false;
+    let ruolo
 
-
+    onMount(() => {
+      ruolo = localStorage.getItem("ruolo");
+    });
     // Definizione dei campi da inviare al backend per la prenotazione
     const campi = [
       { key: 'data_inizio', label: 'Data Inizio', type: 'date', required: true },
@@ -79,7 +83,8 @@
       <p class="text-green-500">{successMessage}</p>
     {/if}
 
-    {#if localStorage.getItem("ruolo") === "student"}
+<!-- solo gli utenti possono prenotare libri -->
+    {#if ruolo === "student"}
     <form on:submit|preventDefault={handleSubmit}>
       {#each campi as campo}
         <div class="mb-4">
@@ -102,8 +107,6 @@
         {/if}
       </Button>
     </form>
-    {:else}
-
     {/if}
   </div>
   

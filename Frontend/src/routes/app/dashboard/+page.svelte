@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import BookCard from "$lib/components/bookCard.svelte";
-    import { Toggle, Modal, Button, Input, Label } from "flowbite-svelte";
+    import { Toggle, Modal, Button, Input, Label, Select, Card } from "flowbite-svelte";
   
     let ordinamento;
     let autore;
@@ -20,7 +20,9 @@
     };
 
     let toUpdateBook = null;
-    let modal = false;
+    let modalModifica = false;
+    let modalVisualizza = false;
+    let selectedBook = null; // libro selezionato da passare al modalVisualizza per la visualizzazione completa di quel libro
     let ruolo = null;
   
     async function fetchBooks() {
@@ -35,7 +37,7 @@
       if (prestabile) params.append("prestabile", prestabile);
   
       const url = `https://bookstoreonline.onrender.com/books?${params.toString()}`;
-  
+      console.log(url)
       const risposta = await fetch(url, {
         method: "GET",
         headers: {
@@ -62,13 +64,15 @@
       await fetchBooks();
     });
   
-    async function sortBooks() {
-      ordinamento = "Titolo";
+    async function toogleSortBooks() {
+      ordinamento = ordinamento === undefined ?  "titolo" : undefined;
+      console.log(ordinamento);
       await fetchBooks();
     }
   
-    async function toogleAvailable() {
-      prestabile = prestabile === undefined || prestabile === "FALSE" ? "TRUE" : "FALSE";
+    async function selectAvailable(event) {
+      prestabile = event.target.value;
+      console.log(prestabile)
       await fetchBooks();
     }
   
@@ -121,13 +125,12 @@
         alert("Errore di rete o del server.");
         console.error(err);
       }
-    }
-  
-    async function handleUpdateBook(book) {
-      modal = true;
+    }  
+    function handleUpdateBook(book) {
+      modalModifica = true;
       toUpdateBook = book;
     }
-    async function handleReserveBook(bookID){
+    function handleReserveBook(bookID){
       console.log("Chiamato handleDeleteBook con ID:", bookID);
       if (!bookID) {
         alert("ID libro non valido");
@@ -136,6 +139,12 @@
       localStorage.setItem('bookID', bookID);
       window.location.href = "/app/reserveBook";
     }
+
+    function handleOpenBook(book){
+      console.log(book)
+      modalVisualizza = true;
+      selectedBook = book;
+    } 
   
     async function aggiornaLibro() {
       const finalUpdate = {
@@ -158,7 +167,7 @@
   
         if (response.ok) {
           alert("Libro aggiornato con successo");
-          modal = false;
+          modalModifica = false;
           newToUpdateBook = { titolo: "", autore: "", casa_editrice: "" };
           await fetchBooks();
         } else {
@@ -181,41 +190,40 @@
         oninput={fetchBooks}
       />
   
-      <select
+      <Select
         onchange={toogleTopic}
-        class="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
+        class="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
         <option value="">Tutte le categorie</option>
         <option value="arti e linguaggi">arti e linguaggi</option>
         <option value="tecnologia">tecnologia</option>
         <option value="letteratura italiana">letteratura italiana</option>
         <option value="scienze pure">scienze pure</option>
         <option value="geografia e storia">geografia e storia</option>
-      </select>
+      </Select>
   
-      <button
-        onclick={sortBooks}
-        class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-      >
-        Ordina alfabeticamente
-      </button>
+      <Toggle checked={false} on:change={toogleSortBooks}>ordina</Toggle>
   
-      <Toggle on:change={toogleAvailable}>disponibile</Toggle>
+
+      <Select onchange={selectAvailable}>
+        <option value="">tutti</option>
+        <option value={true}>disponibili</option>
+        <option value={false}>non disponibili</option>
+      </Select>
   
-      <button
+      <Button
         onclick={resetQuery}
-        class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition"
-      >
+        class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition">
         Reset
-      </button>
+      </Button>
   
       {#if ruolo === "admin"}
-        <button
+        <Button
           onclick={() => (window.location.href = "/app/addBook")}
           class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
         >
           Aggiungi Libro
-        </button>
+        </Button>
       {/if}
     </div>
   
@@ -232,13 +240,14 @@
             on:delete={() => handleDeleteBook(book._id)}
             on:update={() => handleUpdateBook(book)}
             on:reserve={() => handleReserveBook(book._id)}
+            on:open={() => handleOpenBook(book)}
             class="flex-grow flex flex-col"
           />
         </div>
       {/each}
     </div>
   
-    <Modal title="Modifica il libro" bind:open={modal} autoclose>
+    <Modal title="Modifica il libro" bind:open={modalModifica} autoclose>
       <form>
         <div>
           <Label for="titolo">Titolo:</Label>
@@ -270,8 +279,19 @@
   
       {#snippet footer()}
         <Button onclick={aggiornaLibro}>Conferma</Button>
-        <Button color="alternative" onclick={() => (modal = false)}>Annulla</Button>
+        <Button color="alternative" onclick={() => (modalModifica = false)}>Annulla</Button>
       {/snippet}
+    </Modal>
+
+    <Modal title="dettagli del libro" bind:open={modalVisualizza} autoclose>
+      <div class="flex-grow">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{selectedBook.titolo}</h5>
+        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{selectedBook.lingua}, {selectedBook.autore}</p>
+        <p class="mb-3 leading-tight font-normal text-gray-700 dark:text-gray-400">{selectedBook.argomenti}</p>
+        <p class="mb-3 leading-tight font-normal text-gray-700 dark:text-gray-400">{selectedBook.collocazione}</p>
+
+        <h3>{selectedBook.cdd}</h3>
+      </div>
     </Modal>
   </div>
   

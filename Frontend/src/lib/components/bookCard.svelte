@@ -20,7 +20,7 @@
 </script>
 
 <div role="button"class="space-y-4" onclick={(e) =>{e.stopPropagation(); dispatch("open")}}>
-  <Card img="/images/placeholder.svg" class="shadow-none border-0 flex flex-col min-h-[300px]" >
+  <Card img={book.img} class="shadow-none border-0 flex flex-col min-h-[300px]" >
     <div class="m-6 flex flex-col h-full">
 
       <!-- Testo del libro -->

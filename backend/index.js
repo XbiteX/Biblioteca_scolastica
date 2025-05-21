@@ -89,74 +89,60 @@ app.post("/login", async (req,res)=>{
 
 startServer();
 
-app.get("/books" ,auth, async (req, res) => {
-    if(!database) {
-        return res.status(500).json({message: 'Internal server error'});
+app.get("/books", auth, async (req, res) => {
+    if (!database) {
+        return res.status(500).json({ message: 'Internal server error' });
     }
-    try{
-        // Prendi i parametri di query dalla richiesta
-        // argomenti momentaneamente non utilizzati
-        // const argomenti = req.query.argomenti; // disciplina del libro
-        const autore = req.query.autore; // autore del libro
-        const titolo = req.query.titolo; // titolo del libro
-        const lingua = req.query.lingua; // lingua del libro
-        const stato = req.query.stato; // stato del libro
-        const collocazione = req.query.collocazione; // locazione del libro
-        const prestabile = req.query.prestabile; // prestabile del libro
+    try {
+        const autore = req.query.autore;
+        const titolo = req.query.titolo;
+        const lingua = req.query.lingua;
+        const stato = req.query.stato;
+        const collocazione = req.query.collocazione;
+        const prestabile = req.query.prestabile;
+        const ordinamento = req.query.ordinamento;
 
-        const ordinamento = req.query.ordinamento; // ordinamento dei risultati
+        const filter = {};
 
-        const filter = {}; // inizializza un oggetto vuoto per il filtro
+        if (autore) filter["autore"] = autore;
+        if (titolo) filter["titolo"] = titolo;
+        if (lingua) filter["lingua"] = lingua;
+        if (stato) filter["stato"] = stato;
+        if (collocazione) filter["collocazione"] = collocazione;
+        if (prestabile) filter["prestabile"] = prestabile;
 
-            // if (argomenti) {
-            //     filter["Argomenti"] = argomenti; // aggiungi il filtro per argomenti se gli argomenti sono forniti
-            // }
-
-            if (autore) {
-                filter["autore"] = autore; // aggiungi il filtro per autore se autore è fornita
-            }
-            if (titolo) {
-                filter["titolo"] = titolo; // aggiungi il filtro per Titolo se Titolo è fornita
-            }
-            if (lingua) {
-                filter["lingua"] = lingua; // aggiungi il filtro per Lingua se Lingua è fornita
-            }
-            if (stato) {
-                filter["stato"] = stato; // aggiungi il filtro per Stato se Stato è fornita
-            }
-
-            if (collocazione) {
-                filter["collocazione"] = collocazione; // aggiungi il filtro per Collocazione se Collocazione è fornita
-            }
-            if (prestabile) {
-                filter["prestabile"] = prestabile; // aggiungi il filtro per Prestabile se Prestabile è fornita
-            }
-
-        console.log(filter); // logga il filtro per vedere cosa contiene
         let result = await database.collection('books').find(filter).toArray();
 
-        // funzione per ordinare i risultati in base al campo specificato
-        if(ordinamento){
-            result.sort((a, b) => {
-                if (a[ordinamento] < b[ordinamento]) {
-                    return -1;
-                }
-                if (a[ordinamento] > b[ordinamento]) {
-                    return 1;
-                }
-                return 0;
+        // Converti campo img da BSON Binary a base64 per essere visualizzati sul frontend
+        const libriConImgBase64 = result.map(libro => {
+            if (libro.img && libro.img.buffer) {
+                // Converti buffer in base64 con prefisso data URL (modifica MIME se serve)
+                const base64img = libro.img.buffer.toString('base64');
+                return {
+                    ...libro,
+                    img: `data:image/jpeg;base64,${base64img}`
+                };
+            }
+            return libro;
+        });
 
-            })
+    
+        if (ordinamento) {
+            libriConImgBase64.sort((a, b) => {
+                if (a[ordinamento] < b[ordinamento]) return -1;
+                if (a[ordinamento] > b[ordinamento]) return 1;
+                return 0;
+            });
         }
 
+        return res.json(libriConImgBase64);
 
-        console.log(result); // logga il risultato per vedere cosa contiene
-        return res.json(result);
-    } catch(error){
+    } catch (error) {
         console.error(`Internal getting books`, error);
-        return res.status(500).json({message: 'Internal erroe'});
+        return res.status(500).json({ message: 'Internal error' });
     }
 });
+
 
 
 //rotta per aggiungere un libro, solo l'admin lo può fare

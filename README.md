@@ -21,11 +21,6 @@
 - [ ] abbellire la pagina di login
     - aggiungere stili con tailwind
 - [ ] convertire tutti i tag <button>, <input>, <label> con componenti flowbite.
-- [ ] 
-
-
-
-
 
 
 

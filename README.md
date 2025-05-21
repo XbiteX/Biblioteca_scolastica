@@ -1,11 +1,14 @@
 # *TO DO LIST*
 
 - [X] fare la rotta /reserveBook sul backend.
-    - i dettagli sono ancora da stabilire
-- [ ] sul frontend, fare una rotta verso app/reserveBook.
+- [X] sul frontend, fare una rotta verso app/reserveBook.
     - questa rotta dovrà permettere agli studenti di visualizzare i libri prenotati.
     - gli studenti potranno eliminare le prenotazioni a loro nome.
     - gli admin invece potranno eliminare le prenotazioni di tutti.
+- [ ] spostare la pagina app/reserveBook su un modale nella dashboard
+- [ ] aggiungere una pagina per la visualizzazione dei libri prenotati.
+    - in qesta pagina gli tenti potranno anche eliminare le prenotazioni a loro nome.
+    - l'admin viselizzerà le prenotazioni di tutti gli studenti e potrà eliminare le prenotazioni
 - [ ] aggiungere gli altri campi per la modifica dei libri.
     - quando l'admin vuole modificare un libro si apre un modale con all'interno un form.
     - il form chiede solamente 3 campi

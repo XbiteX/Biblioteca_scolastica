@@ -20,18 +20,17 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<div
-  role="button"
-  class="space-y-4"
+<button
+  class="w-full h-full"
   onclick={(e) => {
     e.stopPropagation();
     dispatch("open");
   }}
 >
-  <Card class="shadow-none border-0 flex flex-col min-h-[300px]">
+  <Card class="shadow hover:shadow-xl border-0 flex flex-col min-h-[300px] bg-gray-200 h-full dark:bg-stone-800">
     <!-- Contenitore immagine con dimensioni fisse -->
-    <div class="w-full h-48 overflow-hidden">
-      <img src={img} alt={titolo} class="w-full h-full object-cover" />
+    <div class="w-full h-64 overflow-hidden">
+      <img src={img ? img : "/images/placeholderLibri.webp"} alt={titolo} class="w-full h-full object-cover" />
     </div>
     <div class="m-6 flex flex-col h-full">
       <!-- Testo del libro -->
@@ -45,7 +44,8 @@
       </div>
 
       <div class="flex flex-col gap-2 mb-4">
-        {#if prestabile === "true" || prestabile === true}
+        {#if (prestabile === "true" || prestabile) === true && !isAdmin}
+        
           <Button
             class="w-40"
             on:click={(e) => {
@@ -85,4 +85,4 @@
       </div>
     </div>
   </Card>
-</div>
+</button>

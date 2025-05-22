@@ -36,11 +36,6 @@
   }
 </script>
 
-<img
-  src="/images/Logo.png"
-  alt="Logo Biblioteca"
-  class="fixed top-4 right-4 w-30 h-30 object-contain z-50"
-/>
 
 <form
   on:submit|preventDefault={handleLogin}

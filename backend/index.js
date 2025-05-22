@@ -62,7 +62,7 @@ app.post("/login", async (req,res)=>{
             return res.status(400).json({message:"utente non trovato"})
         }
 
-        let token = buildazioneToken(user.nome, process.env.CHIAVE_JWT, user.ruolo) // creazione del token attraverso la funzione importata
+        let token = buildazioneToken(user.isa, process.env.CHIAVE_JWT, user.ruolo) // creazione del token attraverso la funzione importata
         console.log(token) 
 
         const decoded = jwt.verify(token, process.env.CHIAVE_JWT); //verifica della correttezza del token
@@ -338,4 +338,23 @@ app.get("/justVerifyToken", auth, async (req, res)=>{
         return res.status(500).json({message: "internal server error"})
     }
     return res.status(200).json({message: "token valido"})
+})
+
+app.get("/getReservations", auth, async (req,res)=>{
+    if(!database) {
+        return res.status(500).json({message: "internal server error"})
+    }
+
+ 
+    if(req.role=== "admin"){
+        const result = await database.collection("reserveBook").find({}).toArray(); // prendo tutte le prenotazioni dal database
+        return res.status(200).json(result); // ritorna un messaggio di successo al client
+    }else{
+        const isa = req.isa; // prendo il codice isa dal token
+        const result = await database.collection("reserveBook").find({user_isa: isa}).toArray(); // prendo tutte le prenotazioni del codice isa dal database
+        if(result.length === 0){
+            return res.status(404).json({message: "nessuna prenotazione trovata"})
+        }
+        return res.status(200).json(result);
+    }
 })

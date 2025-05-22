@@ -195,14 +195,14 @@
 
 <!-- Layout Dashboard -->
 <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
-  <!-- Barra Filtri -->
-  <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg max-w-7xl w-full">
+  <!-- Tool bar -->
+  <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white dark:bg-gray-700 rounded-lg max-w-7xl w-full">
     <input
       type="text"
       placeholder="Cerca titolo..."
       bind:value={titolo}
       on:input={fetchBooks}
-      class="w-full sm:w-64 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+      class="w-full sm:w-64 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 basis-1/3"
     />
     <Select class="w-full sm:w-48" onchange={toogleTopic}>
       <option value="">Tutte le categorie</option>
@@ -226,15 +226,12 @@
         Aggiungi Libro
       </Button>
     {/if}
-    <Button color="blue" on:click={() => window.location.href = "/app/reserveBook"}>
-      Visualizza Prenotazioni
-    </Button>
   </div>
 
   <!-- Griglia dei Libri -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4 w-full max-w-7xl">
     {#each books as book}
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-all">
+      <div class="bg-red-300">
         <BookCard
           {...book}
           isAdmin={ruolo === "admin"}

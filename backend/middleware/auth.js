@@ -14,8 +14,11 @@ const logMiddleware = (req, res, next) => {
     }
 
     try{
-        jwt.verify(token, process.env.CHIAVE_JWT); // Verifico che la chiave sia corretta
+        const payload = jwt.verify(token, process.env.CHIAVE_JWT); // Verifico che la chiave sia corretta
         // Se la verifica non ha successio lancia un errore
+
+        req.role = payload.ruolo; // Aggiungo il ruolo al req
+        req.isa = payload.isa; // Aggiungo il codice isa al req
     }catch(error) {
         return res.status(401).json({ message: "Token non valido" });
     }

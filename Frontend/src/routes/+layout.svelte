@@ -4,5 +4,5 @@
 
 </script>
 
-<DarkMode />
+<DarkMode class="fixed top-4 left-4 object-contain"/>
 <slot />

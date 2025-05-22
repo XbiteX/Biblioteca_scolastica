@@ -9,14 +9,19 @@
   import { logout } from "$lib/index.js";
 </script>
 
-<Navbar class="px-4 flex items-center justify-between">
-  <!-- Logout a sinistra -->
+<Navbar class="px-4 flex items-center justify-between bg-blue-300">
+
+    <!-- Logout a sinistra -->
   <NavUl class="flex items-center">
     <NavLi on:click={logout}>Logout</NavLi>
-  </NavUl>
+    <NavLi href="/about">About</NavLi>
+    <NavLi href="/docs/components/navbar">Navbar</NavLi>
+    <NavLi href="/pricing">Pricing</NavLi>
 
-  <!-- Logo al centro o destra -->
-  <NavBrand href="/" class="flex items-center">
+    <NavLi color="blue" href="/app/reserveBook">Gestisci prenotazioni</NavLi>
+  </NavUl>
+ 
+   <NavBrand href="/" class="flex items-center">
     <img
       src="/images/Logo.png"
       class="w-20 h-auto object-contain"
@@ -24,8 +29,9 @@
     />
   </NavBrand>
 
-  <!-- Hamburger per mobile (opzionale) -->
-  <NavHamburger />
+
+
+
 </Navbar>
 
 <slot />

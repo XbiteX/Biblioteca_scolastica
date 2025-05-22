@@ -18,7 +18,7 @@
   let toUpdateBook = null;
   let modalModifica = false;
 
-  // Visualizza dettagli libro
+  // Visualizzazione dettagli libro
   let modalVisualizza = false;
   let selectedBook = null;
 
@@ -34,10 +34,10 @@
   let loading = false;
   const campi = [
     { key: 'data_inizio', label: 'Data Inizio', type: 'date', required: true },
-    { key: 'data_fine',   label: 'Data Fine',   type: 'date', required: true },
+    { key: 'data_fine',   label: 'Data Fine',   type: 'date', required: true }
   ];
 
-  // Fetch libri con filtri
+  // Funzione per fetchare i libri applicando i filtri
   async function fetchBooks() {
     let params = new URLSearchParams();
     if (ordinamento)  params.append("ordinamento", ordinamento);
@@ -71,7 +71,7 @@
     await fetchBooks();
   });
 
-  // Funzioni filtro/reset
+  // Funzioni per gestire i filtri e il reset
   async function toogleSortBooks() {
     ordinamento = ordinamento ? undefined : "titolo";
     await fetchBooks();
@@ -89,7 +89,7 @@
     await fetchBooks();
   }
 
-  // Elimina libro
+  // Funzione per eliminare un libro
   async function handleDeleteBook(bookID) {
     if (!bookID || !confirm("Sei sicuro di voler eliminare questo libro?")) return;
     const res = await fetch("https://bookstoreonline.onrender.com/deleteBook", {
@@ -108,7 +108,7 @@
     }
   }
 
-  // Modifica libro
+  // Funzioni per la modifica del libro
   function handleUpdateBook(book) {
     toUpdateBook = book;
     newToUpdateBook = { titolo: "", autore: "", casa_editrice: "" };
@@ -137,13 +137,13 @@
     }
   }
 
-  // Visualizza dettaglio libro
+  // Apertura del dettaglio libro
   function handleOpenBook(book) {
     selectedBook = book;
     modalVisualizza = true;
   }
 
-  // Apri modale prenotazione
+  // Gestione prenotazione libro
   function handleReserveBook(bookID) {
     if (!bookID) return alert("ID non valido");
     selectedBookID = bookID;
@@ -193,15 +193,18 @@
   }
 </script>
 
+<!-- Layout Dashboard -->
 <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
-  <!-- Barra filtri -->
-  <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white rounded-lg max-w-7xl w-full">
+  <!-- Barra Filtri -->
+  <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg max-w-7xl w-full">
     <input
-      type="text" placeholder="Cerca titolo..."
-      class="w-full sm:w-64 px-4 py-2 border rounded"
-      bind:value={titolo} on:input={fetchBooks}
+      type="text"
+      placeholder="Cerca titolo..."
+      bind:value={titolo}
+      on:input={fetchBooks}
+      class="w-full sm:w-64 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
     />
-    <Select onchange={toogleTopic} class="w-full sm:w-48">
+    <Select class="w-full sm:w-48" onchange={toogleTopic}>
       <option value="">Tutte le categorie</option>
       <option value="arti e linguaggi">arti e linguaggi</option>
       <option value="tecnologia">tecnologia</option>
@@ -209,8 +212,10 @@
       <option value="scienze pure">scienze pure</option>
       <option value="geografia e storia">geografia e storia</option>
     </Select>
-    <Toggle on:change={toogleSortBooks}>Ordina</Toggle>
-    <Select onchange={selectAvailable}>
+    <Toggle on:change={toogleSortBooks} class="transition-all">
+      Ordina
+    </Toggle>
+    <Select class="w-full sm:w-48" onchange={selectAvailable}>
       <option value="">Tutti</option>
       <option value={true}>Disponibili</option>
       <option value={false}>Non disponibili</option>
@@ -226,10 +231,10 @@
     </Button>
   </div>
 
-  <!-- Griglia libri -->
+  <!-- Griglia dei Libri -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4 w-full max-w-7xl">
     {#each books as book}
-      <div class="bg-white rounded shadow flex flex-col">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-all">
         <BookCard
           {...book}
           isAdmin={ruolo === "admin"}
@@ -243,64 +248,83 @@
   </div>
 </div>
 
-<!-- Modale Modifica -->
+<!-- Modal: Modifica Libro -->
 <Modal title="Modifica Libro" bind:open={modalModifica} autoclose>
-  <form class="space-y-4">
-    <Label>Titolo</Label>
-    <Input bind:value={newToUpdateBook.titolo} placeholder={toUpdateBook?.titolo} />
-    <Label>Autore</Label>
-    <Input bind:value={newToUpdateBook.autore} placeholder={toUpdateBook?.autore} />
-    <Label>Casa Editrice</Label>
-    <Input bind:value={newToUpdateBook.casa_editrice} placeholder={toUpdateBook?.casa_editrice} />
-    <div class="flex justify-end gap-2">
+  <form class="space-y-4 p-4 bg-white dark:bg-gray-800 rounded-md">
+    <Label class="block">Titolo</Label>
+    <Input
+      bind:value={newToUpdateBook.titolo}
+      placeholder={toUpdateBook?.titolo}
+      class="w-full px-3 py-2 border rounded transition-all focus:ring-2 focus:ring-blue-500"
+    />
+    <Label class="block">Autore</Label>
+    <Input
+      bind:value={newToUpdateBook.autore}
+      placeholder={toUpdateBook?.autore}
+      class="w-full px-3 py-2 border rounded transition-all focus:ring-2 focus:ring-blue-500"
+    />
+    <Label class="block">Casa Editrice</Label>
+    <Input
+      bind:value={newToUpdateBook.casa_editrice}
+      placeholder={toUpdateBook?.casa_editrice}
+      class="w-full px-3 py-2 border rounded transition-all focus:ring-2 focus:ring-blue-500"
+    />
+    <div class="flex justify-end gap-2 pt-2">
       <Button on:click={aggiornaLibro}>Conferma</Button>
-      <Button color="alternative" on:click={() => (modalModifica = false)}>Annulla</Button>
+      <Button color="alternative" on:click={() => (modalModifica = false)}>
+        Annulla
+      </Button>
     </div>
   </form>
 </Modal>
 
-<!-- Modale Visualizza -->
+<!-- Modal: Visualizza Dettagli Libro -->
 <Modal title="Dettagli Libro" bind:open={modalVisualizza} autoclose>
   {#if selectedBook}
-    <h3 class="text-xl font-bold">{selectedBook.titolo}</h3>
-    <p>{selectedBook.autore} — {selectedBook.lingua}</p>
-    <p class="mt-2">{selectedBook.argomenti}</p>
-    <p>{selectedBook.collocazione}</p>
-    <p>CDD: {selectedBook.cdd}</p>
+    <div class="p-4 bg-white dark:bg-gray-800 rounded-md">
+      <h3 class="text-xl font-bold">{selectedBook.titolo}</h3>
+      <p>{selectedBook.autore} — {selectedBook.lingua}</p>
+      <p class="mt-2">{selectedBook.argomenti}</p>
+      <p>{selectedBook.collocazione}</p>
+      <p>CDD: {selectedBook.cdd}</p>
+    </div>
   {/if}
 </Modal>
 
-<!-- Modale Prenotazione -->
+<!-- Modal: Prenotazione Libro -->
 <Modal title="Prenota il Libro" bind:open={modalPrenota} autoclose>
   {#if ruolo === "student"}
-    {#if error}
-      <p class="text-red-500">{error}</p>
-    {/if}
-    {#if successMessage}
-      <p class="text-green-500">{successMessage}</p>
-    {/if}
-    <form on:submit|preventDefault={handleSubmit} class="space-y-4">
-      {#each campi as campo}
-        <div>
-          <Label for={campo.key}>{campo.label}{campo.required ? ' *' : ''}</Label>
-          <Input
-            id={campo.key}
-            type={campo.type}
-            bind:value={reservation[campo.key]}
-            required={campo.required}
-          />
+    <div class="p-4 bg-white dark:bg-gray-800 rounded-md">
+      {#if error}
+        <p class="text-red-500 mb-2">{error}</p>
+      {/if}
+      {#if successMessage}
+        <p class="text-green-500 mb-2">{successMessage}</p>
+      {/if}
+      <form on:submit|preventDefault={handleSubmit} class="space-y-4">
+        {#each campi as campo}
+          <div>
+            <Label for={campo.key} class="block">{campo.label}{campo.required ? ' *' : ''}</Label>
+            <Input
+              id={campo.key}
+              type={campo.type}
+              bind:value={reservation[campo.key]}
+              required={campo.required}
+              class="w-full px-3 py-2 border rounded transition-all focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700"
+            />
+          </div>
+        {/each}
+        <div class="flex justify-end gap-2">
+          <Button type="submit" disabled={loading}>
+            {#if loading}Caricamento...{:else}Prenota{/if}
+          </Button>
+          <Button color="alternative" on:click={() => (modalPrenota = false)}>
+            Annulla
+          </Button>
         </div>
-      {/each}
-      <div class="flex justify-end gap-2">
-        <Button type="submit" disabled={loading}>
-          {#if loading}Caricamento...{:else}Prenota{/if}
-        </Button>
-        <Button color="alternative" on:click={() => (modalPrenota = false)}>
-          Annulla
-        </Button>
-      </div>
-    </form>
+      </form>
+    </div>
   {:else}
-    <p>Solo gli studenti possono prenotare libri.</p>
+    <p class="text-center">Solo gli studenti possono prenotare libri.</p>
   {/if}
 </Modal>

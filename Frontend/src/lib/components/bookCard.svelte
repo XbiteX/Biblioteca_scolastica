@@ -28,13 +28,15 @@
     dispatch("open");
   }}
 >
-  <Card {img} class="shadow-none border-0 flex flex-col min-h-[300px]">
+  <Card class="shadow-none border-0 flex flex-col min-h-[300px]">
+    <!-- Contenitore immagine con dimensioni fisse -->
+    <div class="w-full h-48 overflow-hidden">
+      <img src={img} alt={titolo} class="w-full h-full object-cover" />
+    </div>
     <div class="m-6 flex flex-col h-full">
       <!-- Testo del libro -->
       <div class="flex-grow">
-        <h5
-          class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-        >
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           {titolo}
         </h5>
         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
@@ -49,8 +51,10 @@
             on:click={(e) => {
               e.stopPropagation();
               dispatch("reserve");
-            }}>prendi in prestito</Button
+            }}
           >
+            prendi in prestito
+          </Button>
         {:else}
           <div class="w-40 opacity-50 cursor-not-allowed select-none">
             non disponibile
@@ -60,7 +64,7 @@
         {#if isAdmin}
           <Button
             color=""
-            onclick={(e) => {
+            on:click={(e) => {
               e.stopPropagation();
               dispatch("delete");
             }}
@@ -69,7 +73,7 @@
             Elimina
           </Button>
           <Button
-            onclick={(e) => {
+            on:click={(e) => {
               e.stopPropagation();
               dispatch("update");
             }}

@@ -221,6 +221,9 @@
         Aggiungi Libro
       </Button>
     {/if}
+    <Button color="blue" on:click={() => window.location.href = "/app/reserveBook"}>
+      Visualizza Prenotazioni
+    </Button>
   </div>
 
   <!-- Griglia libri -->

@@ -1,112 +1,214 @@
 <script>
-    import { Button, Input, Label } from 'flowbite-svelte';
-    import { onMount } from 'svelte';
-    let error = '';
-    let successMessage = '';
-    let loading = false;
-    let ruolo
+  import { onMount } from "svelte";
+  import { Button } from "flowbite-svelte";
 
-    onMount(() => {
-      ruolo = localStorage.getItem("ruolo");
-    });
-    // Definizione dei campi da inviare al backend per la prenotazione
-    const campi = [
-      { key: 'data_inizio', label: 'Data Inizio', type: 'date', required: true },
-      { key: 'data_fine', label: 'Data Fine', type: 'date', required: true },
-    ];
-  
-    let reservation = {};
-  
-    function validateForm() {
-      for (const campo of campi) {
-        if (campo.required && !reservation[campo.key]) {
-          error = `Il campo "${campo.label}" è obbligatorio.`;
-          return false;
-        }
-      }
-      error = '';
-      return true;
+  let reservations = [];
+  let ruolo = null;
+  let userIsa = null;
+  let loading = false;
+  let error = "";
+
+  // Fetch prenotazioni
+  async function fetchReservations() {
+    loading = true;
+    error = "";
+    
+    const token = localStorage.getItem("token");
+    if (!token) {
+      error = "Devi effettuare il login.";
+      loading = false;
+      return;
     }
-  
-    async function handleSubmit() {
-      if (!validateForm()) return;
 
-      reservation.user_isa = localStorage.getItem('codice_isa');
-      reservation.book_id = localStorage.getItem('bookID');
+    try {
+      const res = await fetch("https://bookstoreonline.onrender.com/getReservations", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        error = 'Devi effettuare il login per prenotare un libro.';
-        return;
-      }
-
-      loading = true;
-      console.log('Invio token:', token);
-      console.log('Dati prenotazione:', reservation);
-  
-      try {
-        const res = await fetch('https://bookstoreonline.onrender.com/reserveBook', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify(reservation),
-        });
-  
+      if (res.ok) {
         const data = await res.json();
-        console.log('Risposta server:', res.status, data);
-  
-        if (res.ok) {
-          successMessage = 'Prenotazione effettuata con successo!';
-          // redirect alla dashboard
-          window.location.href = '/app/dashboard'; 
-        } else {
-          error = data.message || 'Errore durante la prenotazione';
-          console.error('Errore:', error);
-        }
-      } catch (err) {
-        console.error(err);
-        error = 'Errore di rete o server';
-      } finally {
-        loading = false;
+        reservations = data;
+      } else {
+        const errorData = await res.json();
+        error = errorData.message || "Errore nel caricamento delle prenotazioni";
+        console.error("Errore fetch prenotazioni:", await res.text());
       }
+    } catch (err) {
+      console.error(err);
+      error = "Errore di rete o server";
+    } finally {
+      loading = false;
     }
-  </script>
-  
-  <div class="max-w-[600px] mx-auto p-4 bg-white rounded shadow-md">
-    <h2>Prenotazione del Libro</h2>
-    {#if error}
-      <p class="text-red-400">{error}</p>
-    {/if}
-    {#if successMessage}
-      <p class="text-green-500">{successMessage}</p>
-    {/if}
+  }
 
-<!-- solo gli utenti possono prenotare libri -->
-    {#if ruolo === "student"}
-    <form on:submit|preventDefault={handleSubmit}>
-      {#each campi as campo}
-        <div class="mb-4">
-          <Label for={campo.key}>
-            {campo.label}{campo.required ? ' *' : ''}
-          </Label>
-          <Input
-            id={campo.key}
-            type={campo.type}
-            bind:value={reservation[campo.key]}
-            required={campo.required}
-          />
-        </div>
-      {/each}
-      <Button type="submit" disabled={loading}>
-        {#if loading}
-          Caricamento...
-        {:else}
-          Prenota
-        {/if}
-      </Button>
-    </form>
-    {/if}
+  // Elimina prenotazione
+  async function handleDeleteReservation(reservationId) {
+    if (!reservationId || !confirm("Sei sicuro di voler eliminare questa prenotazione?")) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Devi effettuare il login.");
+      return;
+    }
+
+    try {
+      const res = await fetch("https://bookstoreonline.onrender.com/deleteReservation", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ id: reservationId })
+      });
+
+      if (res.ok) {
+        alert("Prenotazione eliminata con successo!");
+        await fetchReservations(); // Ricarica le prenotazioni
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || "Errore durante l'eliminazione della prenotazione");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Errore di rete o server");
+    }
+  }
+
+  // Filtra prenotazioni per utente normale (solo le proprie)
+  $: filteredReservations = ruolo === "admin" 
+    ? reservations 
+    : reservations.filter(reservation => reservation.user_isa === userIsa);
+
+  // Formatta data per visualizzazione
+  function formatDate(dateString) {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("it-IT");
+  }
+
+  onMount(async () => {
+    // Controlla autenticazione
+    if (!localStorage.getItem("token")) {
+      window.location.href = "/app/login";
+      return;
+    }
+    
+    ruolo = localStorage.getItem("ruolo");
+    userIsa = localStorage.getItem("codice_isa");
+    await fetchReservations();
+  });
+</script>
+
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
+  <!-- Header -->
+  <div class="w-full max-w-7xl p-4">
+    <div class="bg-white rounded-lg p-6 mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">
+        {ruolo === "admin" ? "Tutte le Prenotazioni" : "Le Mie Prenotazioni"}
+      </h1>
+      <p class="text-gray-600">
+        {ruolo === "admin" 
+          ? "Gestisci tutte le prenotazioni della biblioteca" 
+          : "Visualizza e gestisci le tue prenotazioni"}
+      </p>
+    </div>
   </div>
-  
+
+  <!-- Messaggio di errore -->
+  {#if error}
+    <div class="w-full max-w-7xl p-4">
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        {error}
+      </div>
+    </div>
+  {/if}
+
+  <!-- Loading -->
+  {#if loading}
+    <div class="flex justify-center items-center h-64">
+      <div class="text-lg text-gray-600">Caricamento prenotazioni...</div>
+    </div>
+  {:else}
+    <!-- Griglia prenotazioni -->
+    <div class="w-full max-w-7xl p-4">
+      {#if filteredReservations.length === 0}
+        <div class="bg-white rounded-lg p-8 text-center">
+          <p class="text-gray-500 text-lg">
+            {ruolo === "admin" 
+              ? "Nessuna prenotazione presente nel sistema" 
+              : "Non hai ancora effettuato prenotazioni"}
+          </p>
+        </div>
+      {:else}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {#each filteredReservations as reservation}
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+              <!-- Header della card -->
+              <div class="flex justify-between items-start mb-4">
+                <div class="text-sm text-gray-500">
+                  ID: {reservation._id || "N/A"}
+                </div>
+              </div>
+
+              <!-- Informazioni utente -->
+              <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                  Codice ISA: {reservation.user_isa}
+                </h3>
+              </div>
+
+              <!-- Informazioni libro -->
+              <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">
+                  <span class="font-medium">Libro ID:</span> {reservation.book_id}
+                </p>
+              </div>
+
+              <!-- Date prenotazione -->
+              <div class="mb-6">
+                <div class="flex flex-col space-y-2">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Data Inizio:</span>
+                    <span class="font-medium">{formatDate(reservation.data_inizio)}</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Data Fine:</span>
+                    <span class="font-medium">{formatDate(reservation.data_fine)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottone elimina -->
+              <div class="flex justify-end">
+                <Button 
+                  color="red" 
+                  size="sm"
+                  on:click={() => handleDeleteReservation(reservation._id)}
+                >
+                  Elimina
+                </Button>
+              </div>
+            </div>
+          {/each}
+        </div>
+      {/if}
+    </div>
+  {/if}
+
+  <!-- Bottone torna alla dashboard -->
+  <div class="w-full max-w-7xl p-4">
+    <div class="flex justify-center">
+      <Button 
+        color="alternative" 
+        on:click={() => window.location.href = "/app/dashboard"}
+      >
+        Torna alla Dashboard
+      </Button>
+    </div>
+  </div>
+</div>

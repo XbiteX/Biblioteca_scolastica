@@ -293,7 +293,7 @@ app.post("/reserveBook", async (req,res) => {
             return res.status(400).json({message: 'Oggetto prenotazione non valido o vuoto'});
         }
 
-        // console.log(reservation); // logga la prenotazione per vedere cosa contiene
+        console.log(reservation); // logga la prenotazione per vedere cosa contiene
 
         const user_isa = parseInt(reservation.user_isa); // prendo il codice isa dal body della richiesta
         const book_id = reservation.book_id; // prendo l'id del libro dal body della richiesta

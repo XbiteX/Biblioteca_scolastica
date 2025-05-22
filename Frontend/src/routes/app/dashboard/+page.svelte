@@ -117,6 +117,7 @@
     newToUpdateBook = { titolo: "", autore: "", casa_editrice: "" };
     modalModifica = true;
   }
+
   async function aggiornaLibro() {
     const update = {
       titolo: newToUpdateBook.titolo || toUpdateBook.titolo,
@@ -165,7 +166,7 @@
     error = "";
     return true;
   }
-  async function handleSubmit() {
+  async function handleSubmitReservation() {
     modalPrenota = false
     if (!validateForm()) return;
     loading = true;
@@ -312,7 +313,7 @@
       </div>
     {/each}
     <div class="flex justify-end gap-2">
-      <Button type="submit" disabled={loading} onclick={handleSubmit}>
+      <Button type="submit" disabled={loading} onclick={handleSubmitReservation}>
         {#if loading}Caricamento...{:else}Prenota{/if}
       </Button>
       <Button color="alternative" on:click={() => (modalPrenota = false)}>

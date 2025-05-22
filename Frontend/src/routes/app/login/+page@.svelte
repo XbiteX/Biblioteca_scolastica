@@ -36,7 +36,6 @@
   }
 </script>
 
-<!-- 🔝 Immagine in alto a destra della pagina -->
 <img
   src="/images/Logo.png"
   alt="Logo Biblioteca"

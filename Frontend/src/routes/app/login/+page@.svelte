@@ -1,5 +1,5 @@
 <script>
-  import {Label, Input, Button} from 'flowbite-svelte';
+  import { Label, Input, Button } from 'flowbite-svelte';
   let isa = '';
   let password = '';
   let error = '';
@@ -36,12 +36,20 @@
   }
 </script>
 
+<!-- 🔝 Immagine in alto a destra della pagina -->
+<img
+  src="/images/Logo.png"
+  alt="Logo Biblioteca"
+  class="fixed top-4 right-4 w-30 h-30 object-contain z-50"
+/>
 
 <form
   on:submit|preventDefault={handleLogin}
   class="max-w-md mx-auto mt-20 p-6 bg-white dark:bg-gray-600 rounded-2xl shadow-lg space-y-5 border border-gray-200 dark:border-gray-800"
 >
-  <h2 class="text-2xl font-semibold text-center text-gray-800 dark:text-white">Accesso Biblioteca scolastica</h2>
+  <h2 class="text-2xl font-semibold text-center text-gray-800 dark:text-white">
+    Accesso Biblioteca scolastica
+  </h2>
 
   <div class="space-y-1">
     <Label for="isa" class="block text-sm font-medium text-gray-700 dark:text-white">Codice ISA</Label>
@@ -79,4 +87,3 @@
     {loading ? 'Accesso in corso...' : 'Accedi'}
   </Button>
 </form>
-

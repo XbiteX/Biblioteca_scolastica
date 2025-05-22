@@ -35,8 +35,8 @@ body della risposta:
 ## /books
 -> permssi admin: non richiesti 
 -> metodo: **GET**  
--> rotta: **https://bookstoreonline.onrender.com/books**
--> body: **NO**
+-> rotta: **https://bookstoreonline.onrender.com/books**  
+-> body: **NO**  
 -> autenticazione: **richiesta**
 
 
@@ -55,11 +55,11 @@ poi c'è anche un ordinamento:
 
 
 ## /addBook
--> permessi admin: **richiesti**
--> metodo: **POST**
--> rotta: **https://bookstoreonline.onrender.com/addBook**
--> body: **SI**
--> autenticazione: **richiesta**
+-> permessi admin: **richiesti**  
+-> metodo: **POST**  
+-> rotta: **https://bookstoreonline.onrender.com/addBook**  
+-> body: **SI**  
+-> autenticazione: **richiesta**  
 
  
 permette di aggiungere un libro specifico, i parametri obbligatori sono l'id la collocazione, l'autore, la lingua e il titolo.
@@ -84,11 +84,11 @@ I parametri facoltativi possono non essere messi, quelli obbligatori no.
 
 
 ## /deleteBook
--> permessi admin: **richiesti**
--> metodo: **DELETE**
--> rotta: **https://bookstoreonline.onrender.com/addBook**
--> body: **SI**
--> autenticazione: **richiesta**
+-> permessi admin: **richiesti**  
+-> metodo: **DELETE**  
+-> rotta: **https://bookstoreonline.onrender.com/addBook**  
+-> body: **SI**  
+-> autenticazione: **richiesta**  
 
 
 permette all'admin di eliminare un libro specifio, i parametri necessari sono l'id, il corpo della richiesta sarà così formato:
@@ -101,11 +101,11 @@ permette all'admin di eliminare un libro specifio, i parametri necessari sono l'
 l'id può essere sia una stringa che un numero
 
 ## /updateBook
--> permessi admin: **richiesti**
--> metodo: **PATCH**
--> rotta: **https://bookstoreonline.onrender.com/updateBook**
--> body: **SI**
--> autenticazione: **richiesta**
+-> permessi admin: **richiesti**  
+-> metodo: **PATCH**  
+-> rotta: **https://bookstoreonline.onrender.com/updateBook**  
+-> body: **SI**  
+-> autenticazione: **richiesta**  
 
 
 permette di aggiornare un libro specifio, i parametri necessari sono l'id del libro ed un'oggetto dove si specificano i campi da modificare e i loro corrispettivi valori.
@@ -126,11 +126,11 @@ da notare che i nomi dei campi dell'oggetto update devono corrispondere coi nomi
 solo i parametri che vengono specificati nell'oggetto "update" andranno aggiornati
 
 ## /reserveBook
--> permessi admin: non richiesti
--> metodo: **POST**
--> rotta: **https://bookstoreonline.onrender.com/reserveBook**
--> body: **SI**
--> autenticazione: **richiesta**
+-> permessi admin: non richiesti  
+-> metodo: **POST**  
+-> rotta: **https://bookstoreonline.onrender.com/reserveBook**  
+-> body: **SI**  
+-> autenticazione: **richiesta**  
 
 
 permette di prendere in prestito un libro specifio, i parametri necessari sono l'id del libro, il codice isa dell'utente e le date di inizio e fine prestito.
@@ -147,15 +147,30 @@ il body della richiesta sarà quindi così formato:
 da notare che i nomi dei campi dell'oggetto update devono corrispondere coi nomi dei campi dei libri nella collection "reserveBook".
 
 ## /justVerifyToken
--> permessi admin: non richiesti
--> metodo: **GET**
--> rotta: **https://bookstoreonline.onrender.com/justVerifyToken**
--> body: NO
--> autenticazione: **richiesta**
+-> permessi admin: non richiesti  
+-> metodo: **GET**  
+-> rotta: **https://bookstoreonline.onrender.com/justVerifyToken**  
+-> body: NO  
+-> autenticazione: **richiesta**  
 
 permette al client di verificare che il suo token sia valido.  
 questa rotta serve perchè capitava che nel loclastorage del client c'era un token scaduto (perchè magari ha fatto l'accesso in passato), però il token effettivamente c'era e quindi l'utente
 veniva rindirizzato alla dashboard dove cercava di fare delle richieste con un token scaduto, che ovviamente non andavano a buon fine e quindi l'utente doveva manualmente ritornare a /login
+
+## /getReservations
+-> permessi admin: dipende dai casi (leggi sotto) 
+-> metodo: **GET**  
+-> rotta: **https://bookstoreonline.onrender.com/getReservations**  
+-> body: NO  
+-> autenticazione: **richiesta** 
+
+se l'utente è un admin:
+ritorna tutte le prenotazioni
+
+se l'utente non è un admin:
+ritorna le proprie prenotazioni 
+
+da notare che il client deve passare solo il token, poi si vedrà nel payload del token se l'utente è l'admin oppure uno studente normale
 
 
 

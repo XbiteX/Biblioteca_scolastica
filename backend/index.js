@@ -283,7 +283,7 @@ app.patch("/updateBook",authAdmin, async (req, res) => {
 });
  
 //rotta per prenotare un libro
-app.post("/reserveBook", async (req,res) => {
+app.post("/reserveBook", auth, async (req,res) => {
     if(!database) {
         return res.status(500).json({message: 'Internal server error'});
     }
@@ -300,16 +300,16 @@ app.post("/reserveBook", async (req,res) => {
         const data_inizio = reservation.data_inizio; // prendo la data di inizio dal body della richiesta
         const data_fine = reservation.data_fine; // prendo la data di fine dal body della richiesta
 
-        if(book_id){
+        if(!book_id){
             return res.status(400).json({message: "ID del libro non fornito"})
         }
-        if(user_isa){
+        if(!user_isa){
             return res.status(400).json({message: "Codice isa non fornito"})
         }
-        if(data_inizio){
+        if(!data_inizio){
             return res.status(400).json({message: "Data di inizio non fornta"})
         }
-        if(data_fine){
+        if(!data_fine){
             return res.status(400).json({message: "Data di fine non fornita"})
         }
 

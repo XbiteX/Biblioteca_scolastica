@@ -293,23 +293,28 @@ app.post("/reserveBook", async (req,res) => {
             return res.status(400).json({message: 'Oggetto prenotazione non valido o vuoto'});
         }
 
-        console.log(reservation); // logga la prenotazione per vedere cosa contiene
+        // console.log(reservation); // logga la prenotazione per vedere cosa contiene
 
-        if(!reservation.book_id){
+        const user_isa = parseInt(reservation.user_isa); // prendo il codice isa dal body della richiesta
+        const book_id = reservation.book_id; // prendo l'id del libro dal body della richiesta
+        const data_inizio = reservation.data_inizio; // prendo la data di inizio dal body della richiesta
+        const data_fine = reservation.data_fine; // prendo la data di fine dal body della richiesta
+
+        if(book_id){
             return res.status(400).json({message: "ID del libro non fornito"})
         }
-        if(!reservation.user_isa){
+        if(user_isa){
             return res.status(400).json({message: "Codice isa non fornito"})
         }
-        if(!reservation.data_inizio){
+        if(data_inizio){
             return res.status(400).json({message: "Data di inizio non fornta"})
         }
-        if(!reservation.data_fine){
+        if(data_fine){
             return res.status(400).json({message: "Data di fine non fornita"})
         }
 
-        const userID = await database.collection("users").findOne({... reservation.user_isa}); // controllo che il codice isa fornito sia prensente nel database
-        const bookID = await database.collection("books").findOne({... reservation.book_id}); // controllo che il codice de libro fornito sia prensente nel database
+        const userID = await database.collection("users").findOne({... user_isa}); // controllo che il codice isa fornito sia prensente nel database
+        const bookID = await database.collection("books").findOne({... book_id}); // controllo che il codice de libro fornito sia prensente nel database
 
         if(!userID){
             return res.status(400).json({message:"utente non trovato"})

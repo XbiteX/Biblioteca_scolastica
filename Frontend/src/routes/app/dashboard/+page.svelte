@@ -22,17 +22,18 @@
   let modalVisualizza = false;
   let selectedBook = null;
 
-  // Ruolo utente
+  // Ruolo, isa e token utente
   let ruolo = null;
+  let isa = null;
+  let token = null;
 
   // Prenotazione
   let modalPrenota = false;
   let selectedBookID = null;
   let reservation = {};
   let error = "";
-  let successMessage = "";
   let loading = false;
-  const campi = [
+  const campiPrenotazione = [
     { key: 'data_inizio', label: 'Data Inizio', type: 'date', required: true },
     { key: 'data_fine',   label: 'Data Fine',   type: 'date', required: true }
   ];
@@ -52,7 +53,7 @@
     const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${token}`
       }
     });
     if (res.ok) {
@@ -68,6 +69,8 @@
       return;
     }
     ruolo = localStorage.getItem("ruolo");
+    isa = localStorage.getItem("isa");
+    token = localStorage.getItem("token");
     await fetchBooks();
   });
 
@@ -96,7 +99,7 @@
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ id: bookID })
     });
@@ -124,7 +127,7 @@
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ id: toUpdateBook._id, update })
     });
@@ -145,32 +148,35 @@
 
   // Gestione prenotazione libro
   function handleReserveBook(bookID) {
-    if (!bookID) return alert("ID non valido");
     selectedBookID = bookID;
     reservation = {};
-    error = successMessage = "";
+    error = "";
     modalPrenota = true;
   }
+
   function validateForm() {
-    for (const campo of campi) {
+    campiPrenotazione.forEach(campo => {
       if (campo.required && !reservation[campo.key]) {
         error = `Il campo "${campo.label}" è obbligatorio.`;
         return false;
       }
-    }
+    });
+ 
     error = "";
     return true;
   }
   async function handleSubmit() {
+    modalPrenota = false
     if (!validateForm()) return;
-    const token = localStorage.getItem("token");
-    if (!token) return error = "Devi effettuare il login.";
     loading = true;
     const body = {
       ...reservation,
-      user_isa: localStorage.getItem("codice_isa"),
+      user_isa: isa,
       book_id: selectedBookID
     };
+
+    console.log(body)
+
     const res = await fetch("https://bookstoreonline.onrender.com/reserveBook", {
       method: "POST",
       headers: {
@@ -179,13 +185,12 @@
       },
       body: JSON.stringify(body)
     });
+
     const data = await res.json();
     if (res.ok) {
-      successMessage = "Prenotazione effettuata!";
-      setTimeout(() => {
-        modalPrenota = false;
-        fetchBooks();
-      }, 1200);
+      modalPrenota = false;
+      alert("Prenotazione effettuata con successo");
+      fetchBooks();
     } else {
       error = data.message || "Errore prenotazione";
     }
@@ -289,39 +294,30 @@
 </Modal>
 
 <!-- Modal: Prenotazione Libro -->
-<Modal title="Prenota il Libro" bind:open={modalPrenota} autoclose>
-  {#if ruolo === "student"}
-    <div class="p-4 bg-white dark:bg-gray-800 rounded-md">
-      {#if error}
-        <p class="text-red-500 mb-2">{error}</p>
-      {/if}
-      {#if successMessage}
-        <p class="text-green-500 mb-2">{successMessage}</p>
-      {/if}
-      <form on:submit|preventDefault={handleSubmit} class="space-y-4">
-        {#each campi as campo}
-          <div>
-            <Label for={campo.key} class="block">{campo.label}{campo.required ? ' *' : ''}</Label>
-            <Input
-              id={campo.key}
-              type={campo.type}
-              bind:value={reservation[campo.key]}
-              required={campo.required}
-              class="w-full px-3 py-2 border rounded transition-all focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700"
-            />
-          </div>
-        {/each}
-        <div class="flex justify-end gap-2">
-          <Button type="submit" disabled={loading}>
-            {#if loading}Caricamento...{:else}Prenota{/if}
-          </Button>
-          <Button color="alternative" on:click={() => (modalPrenota = false)}>
-            Annulla
-          </Button>
-        </div>
-      </form>
-    </div>
-  {:else}
-    <p class="text-center">Solo gli studenti possono prenotare libri.</p>
+<Modal title="Prenota il Libro" bind:open={modalPrenota} class="p-4 bg-white dark:bg-gray-800 rounded-md" autoclose>
+  {#if error}
+    <p class="text-red-500 mb-2">{error}</p>
   {/if}
+  <form class="space-y-4">
+    {#each campiPrenotazione as campo}
+      <div>
+        <Label for={campo.key}>{campo.label}{campo.required ? ' *' : ''}</Label>
+        <Input
+          id={campo.key}
+          type={campo.type}
+          bind:value={reservation[campo.key]}
+          required={campo.required}
+          class="w-full px-3 py-2 border rounded transition-all focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700"
+        />
+      </div>
+    {/each}
+    <div class="flex justify-end gap-2">
+      <Button type="submit" disabled={loading} onclick={handleSubmit}>
+        {#if loading}Caricamento...{:else}Prenota{/if}
+      </Button>
+      <Button color="alternative" on:click={() => (modalPrenota = false)}>
+        Annulla
+      </Button>
+    </div>
+  </form>
 </Modal>

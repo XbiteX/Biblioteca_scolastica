@@ -5,7 +5,7 @@
     - questa rotta dovrà permettere agli studenti di visualizzare i libri prenotati.
     - gli studenti potranno eliminare le prenotazioni a loro nome.
     - gli admin invece potranno eliminare le prenotazioni di tutti.
-- [ ] spostare la pagina app/reserveBook su un modale nella dashboard
+- [X] spostare la pagina app/reserveBook su un modale nella dashboard
 - [ ] aggiungere una pagina per la visualizzazione dei libri prenotati.
     - in qesta pagina gli tenti potranno anche eliminare le prenotazioni a loro nome.
     - l'admin viselizzerà le prenotazioni di tutti gli studenti e potrà eliminare le prenotazioni
@@ -20,7 +20,7 @@
     - se ciò accade il frontend rimanda l'utente sulla pagina di login.
 - [ ] abbellire la pagina di login
     - aggiungere stili con tailwind
-- [ ] convertire tutti i tag <button>, <input>, <label> con componenti flowbite.
+- [X] convertire tutti i tag <button>, <input>, <label> con componenti flowbite.
 
 
 

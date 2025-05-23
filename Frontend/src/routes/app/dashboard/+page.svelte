@@ -34,8 +34,7 @@
   let error = "";
   let loading = false;
   const campiPrenotazione = [
-    { key: 'data_inizio', label: 'Data Inizio', type: 'date', required: true },
-    { key: 'data_fine',   label: 'Data Fine',   type: 'date', required: true }
+    { key: 'data_fine',   label: 'Data Fine Prenotazione',   type: 'date', required: true }
   ];
 
   // Funzione per fetchare i libri applicando i filtri

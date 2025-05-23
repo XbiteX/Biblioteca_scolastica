@@ -297,7 +297,7 @@ app.post("/reserveBook", auth, async (req,res) => {
 
         const user_isa = parseInt(reservation.user_isa); // prendo il codice isa dal body della richiesta
         const book_id = reservation.book_id; // prendo l'id del libro dal body della richiesta
-        const data_inizio = reservation.data_inizio; // prendo la data di inizio dal body della richiesta
+        // const data_inizio = reservation.data_inizio; // prendo la data di inizio dal body della richiesta
         const data_fine = reservation.data_fine; // prendo la data di fine dal body della richiesta
 
         if(!book_id){
@@ -306,9 +306,9 @@ app.post("/reserveBook", auth, async (req,res) => {
         if(!user_isa){
             return res.status(400).json({message: "Codice isa non fornito"})
         }
-        if(!data_inizio){
-            return res.status(400).json({message: "Data di inizio non fornta"})
-        }
+        // if(!data_inizio){
+        //     return res.status(400).json({message: "Data di inizio non fornta"})
+        // }
         if(!data_fine){
             return res.status(400).json({message: "Data di fine non fornita"})
         }
@@ -329,6 +329,11 @@ app.post("/reserveBook", auth, async (req,res) => {
             return res.status(500).json({message: 'Errore durante l\'inserimento della prenotazione'});
         }
 
+        await collection("books").updateOne(
+            { _id: bookID },     
+            { $set: {prestabile: false} }        
+        );
+        
         return res.status(200).json({message: 'tutto ok'}); // ritorna un messaggio di successo al client
 
     } catch(error){

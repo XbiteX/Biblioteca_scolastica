@@ -289,6 +289,7 @@ app.post("/reserveBook", auth, async (req,res) => {
     }
     try{        
         let reservation = req.body; // prendo la prenotazione dal body della richiesta
+
         if(!reservation || typeof reservation !== 'object' || Object.keys(reservation).length === 0) {
             return res.status(400).json({message: 'Oggetto prenotazione non valido o vuoto'});
         }
@@ -297,7 +298,6 @@ app.post("/reserveBook", auth, async (req,res) => {
 
         const user_isa = parseInt(reservation.user_isa); // prendo il codice isa dal body della richiesta
         const book_id = reservation.book_id; // prendo l'id del libro dal body della richiesta
-        // const data_inizio = reservation.data_inizio; // prendo la data di inizio dal body della richiesta
         const data_fine = reservation.data_fine; // prendo la data di fine dal body della richiesta
 
         if(!book_id){
@@ -313,27 +313,32 @@ app.post("/reserveBook", auth, async (req,res) => {
             return res.status(400).json({message: "Data di fine non fornita"})
         }
 
+        const dataInizio = new Date(); // prendo la data di inizio a oggi
+        const dataFine = new Date(data_fine); // trasformo la data di fine (che sarebbe una strunga) in un oggetto Date
+
+        reservation.data_fine  = new Date(dataFine)
+        reservation.data_inizio = dataInizio;
+
         const userID = await database.collection("users").findOne({... user_isa}); // controllo che il codice isa fornito sia prensente nel database
-        const bookID = await database.collection("books").findOne({... book_id}); // controllo che il codice de libro fornito sia prensente nel database
+        const bookID = await database.collection("books").findOne({... book_id}, {projection: { prestabile: 1, _id: 0 }}); // controllo che il codice de libro fornito sia prensente nel database, e vede se è prenotabile
 
-        if(!userID){
-            return res.status(400).json({message:"utente non trovato"})
-        }
-        if(!bookID){
-            return res.status(400).json({message:"libro non trovato"})
-        }
+        if(!userID) return res.status(400).json({message:"utente non trovato"})
+        if(!bookID) return res.status(400).json({message:"libro non trovato"})
+        if(bookID.prestabile === false) return res.status(400).json({message:"libro non prenotabile / già prenotato"})
+        
+        const resultCreateReservation = await database.collection("reserveBook").insertOne(reservation); // inserisco la prenotazione nel database
 
-        const result = await database.collection("reserveBook").insertOne(reservation); // inserisco la prenotazione nel database
+        if(resultCreateReservation.acknowledged === false) return res.status(500).json({message: 'Errore durante l\'inserimento della prenotazione'});
 
-        if(result.acknowledged === false) {
-            return res.status(500).json({message: 'Errore durante l\'inserimento della prenotazione'});
-        }
-
-        await collection("books").updateOne(
-            { _id: bookID },     
+        const resultChangeAvaiability = await database.collection("books").updateOne(
+            { _id: book_id },     
             { $set: {prestabile: false} }        
         );
-        
+
+        if (resultChangeAvaiability.matchedCount === 0) {
+            return res.status(404).json({ message: 'Libro non trovato  (nessun libro corrisponde all id' });
+        }
+
         return res.status(200).json({message: 'tutto ok'}); // ritorna un messaggio di successo al client
 
     } catch(error){

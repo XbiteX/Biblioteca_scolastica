@@ -33,10 +33,19 @@
   let reservation = {};
   let error = "";
   let loading = false;
+
+
   const campiPrenotazione = [
-    { key: 'data_fine',   label: 'Data Fine Prenotazione',   type: 'date', required: true }
+    { key: 'data_fine',   label: 'Data Fine Prenotazione',   type: 'date', required: true, min: getTodayDate()  }
   ];
 
+  function getTodayDate() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
   // Funzione per fetchare i libri applicando i filtri
   async function fetchBooks() {
     let params = new URLSearchParams();
@@ -307,6 +316,7 @@
           type={campo.type}
           bind:value={reservation[campo.key]}
           required={campo.required}
+          min={campo.min}
           class="w-full px-3 py-2 border rounded transition-all focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700"
         />
       </div>

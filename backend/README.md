@@ -139,12 +139,11 @@ il body della richiesta sarà quindi così formato:
 {
   "user_id": 4,
   "book_id": 4,
-  "data_inizio": 2025-05-06,
   "data_fine": 2025-05-13,
 }
 ```
-
 da notare che i nomi dei campi dell'oggetto update devono corrispondere coi nomi dei campi dei libri nella collection "reserveBook".
+prima di creare l'oggetto nella collection, il database controllerà se il libro con l'id corrispondente ha il campo prestabile == true, in quel caso significa che nessuno ha preso in prestito quel libro oppure perchè il libro non è prestabile (magari è un libro solo per la consultazione)
 
 ## /justVerifyToken
 -> permessi admin: non richiesti  

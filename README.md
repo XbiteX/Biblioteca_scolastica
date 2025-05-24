@@ -6,7 +6,7 @@
     - gli studenti potranno eliminare le prenotazioni a loro nome.
     - gli admin invece potranno eliminare le prenotazioni di tutti.
 - [X] spostare la pagina app/reserveBook su un modale nella dashboard
-- [ ] aggiungere una pagina per la visualizzazione dei libri prenotati.
+- [X] aggiungere una pagina per la visualizzazione dei libri prenotati.
     - in qesta pagina gli tenti potranno anche eliminare le prenotazioni a loro nome.
     - l'admin viselizzerà le prenotazioni di tutti gli studenti e potrà eliminare le prenotazioni
 - [ ] aggiungere gli altri campi per la modifica dei libri.

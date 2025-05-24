@@ -14,7 +14,7 @@
     <!-- Logout a sinistra -->
   <NavUl class="flex items-center">
     <NavLi on:click={logout}>Logout</NavLi>
-    <NavLi href="/about">About</NavLi>
+    <NavLi href="/app/about">About</NavLi>
     <NavLi href="/pricing">Pricing</NavLi>
 
     <NavLi color="blue" href="/app/reserveBook">Gestisci prenotazioni</NavLi>

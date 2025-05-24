@@ -375,31 +375,31 @@ app.get("/getReservations", auth, async (req,res)=>{
     }
 })
 
-//rotta per eliminare un libro, solo l'admin lo può fare
-app.delete("/deleteReservation",authAdmin, async (req, res) => {
+//rotta per eliminare una prenotazione, solo l'admin lo può fare
+app.delete("/deleteReservation",auth, async (req, res) => {
     if(!database) {
         return res.status(500).json({message: 'Internal server error'});
     }
     try{
-        const bookID = req.body.id; // prendo l'id dal body della richiesta
-        if (!bookID){
-            return res.status(400).json({message: "ID del libro non fornito"})
+        const reservationID = req.body.id; // prendo l'id dal body della richiesta
+        if (!reservationID){
+            return res.status(400).json({message: "ID della prenotazione non fornito"})
         }
-        if (isNaN(parseInt(bookID))){
-            return res.status(400).json({message: "ID del libro deve esseree un numero o una stringa numerica"})
+        if (isNaN(parseInt(reservationID))){
+            return res.status(400).json({message: "ID della prenotazione deve essere un numero o una stringa numerica"})
         }
-        const result = await database.collection('books').deleteOne({ _id : parseInt(bookID) }); // elimino il libro in base all'id
+        const result = await database.collection('reserveBook').deleteOne({ _id : parseInt(reservationID) }); // elimino la prenotazione in base all'id
 
         //   result è un'istanza di DeleteResult che contiene in seguenti campi
         //   acknowledged: true,      booleano: indica se il server ha ricevuto e riconosciuto la richiesta
         //   deletedCount: 1          numero: quanti documenti sono stati effettivamente eliminati
 
         if (result.deletedCount === 0) {
-            return res.status(404).json({ message: 'Libro non trovato o già eliminato' });
+            return res.status(404).json({ message: 'prenotazione non trovata o già eliminata' });
         }
-        return res.status(200).json({message: 'Libro eliminato con successo'}); // ritorna un messaggio di successo al client
+        return res.status(200).json({message: 'prenotazione eliminata con successo'}); // ritorna un messaggio di successo al client
     } catch(error){
-        console.error(`Internal deleting book`, error);
-        return res.status(500).json({message: 'Internal erroe'});
+        console.error(`Internal deleting prenotazione`, error);
+        return res.status(500).json({message: 'Internal error'});
     }
 });

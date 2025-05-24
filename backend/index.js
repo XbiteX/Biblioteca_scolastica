@@ -365,7 +365,7 @@ app.get("/getReservations", auth, async (req,res)=>{
         const result = await database.collection("reserveBook").find({}).toArray(); // prendo tutte le prenotazioni dal database
         return res.status(200).json(result); // ritorna un messaggio di successo al client
     }else{
-        const isa = req.isa; // prendo il codice isa dal token
+        const isa = req.isa; // prendo il codice isa dalla richiesta
         const result = await database.collection("reserveBook").find({user_isa: isa}).toArray(); // prendo tutte le prenotazioni del codice isa dal database
         if(result.length === 0){
             return res.status(404).json({message: "nessuna prenotazione trovata"})

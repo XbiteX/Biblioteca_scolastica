@@ -272,8 +272,7 @@
   }
 </script>
 
-<!-- Layout Dashboard -->
-<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
+<div class="flex flex-col items-center flex-start min-h-screen bg-gray-100 dark:bg-gray-800">
   <!-- Tool bar -->
   <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white dark:bg-gray-700 rounded-lg max-w-7xl w-full">
     <input
@@ -299,7 +298,6 @@
       <Toggle on:change={toogleSortBooks} class="transition-all"></Toggle>
     </div>
 
-    <p class="text-gray-900 dark:text-white">Filtra:</p>
 
     <Select class="w-full sm:w-48" on:change={selectAvailable}>
       <option value="">Tutti</option>

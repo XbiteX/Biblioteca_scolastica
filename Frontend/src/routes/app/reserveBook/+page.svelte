@@ -14,6 +14,7 @@
     error = "";
     
     const token = localStorage.getItem("token");
+    
     if (!token) {
       error = "Devi effettuare il login.";
       loading = false;

@@ -44,15 +44,15 @@
       </div>
 
       <div class="flex flex-col gap-2 mb-4">
-        {#if (prestabile === "true" || prestabile) === true && !isAdmin}
+        {#if  !isAdmin}
+          {#if prestabile === "true" || prestabile === true}
         
           <Button
             class="w-40"
             on:click={(e) => {
               e.stopPropagation();
               dispatch("reserve");
-            }}
-          >
+            }}>
             prendi in prestito
           </Button>
         {:else}
@@ -60,6 +60,8 @@
             non disponibile
           </div>
         {/if}
+        {/if}
+
 
         {#if isAdmin}
           <Button

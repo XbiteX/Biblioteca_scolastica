@@ -324,7 +324,8 @@ app.post("/reserveBook", auth, async (req,res) => {
 
         if(!userID) return res.status(400).json({message:"utente non trovato"})
         if(!bookID) return res.status(400).json({message:"libro non trovato"})
-        if(bookID.prestabile === false) return res.status(400).json({message:"libro non prenotabile / già prenotato"})
+
+        if(bookID) return res.status(400).json({message:"libro non prenotabile / già prenotato"})
         
         const resultCreateReservation = await database.collection("reserveBook").insertOne(reservation); // inserisco la prenotazione nel database
 
@@ -365,7 +366,7 @@ app.get("/getReservations", auth, async (req,res)=>{
         const result = await database.collection("reserveBook").find({}).toArray(); // prendo tutte le prenotazioni dal database
         return res.status(200).json(result); // ritorna un messaggio di successo al client
     }else{
-        const isa = req.isa; // prendo il codice isa dalla richiesta
+        const isa = req.isa; // prendo il codice isa dal token
         const result = await database.collection("reserveBook").find({user_isa: isa}).toArray(); // prendo tutte le prenotazioni del codice isa dal database
         if(result.length === 0){
             return res.status(404).json({message: "nessuna prenotazione trovata"})
@@ -373,3 +374,32 @@ app.get("/getReservations", auth, async (req,res)=>{
         return res.status(200).json(result);
     }
 })
+
+//rotta per eliminare un libro, solo l'admin lo può fare
+app.delete("/deleteReservation",authAdmin, async (req, res) => {
+    if(!database) {
+        return res.status(500).json({message: 'Internal server error'});
+    }
+    try{
+        const bookID = req.body.id; // prendo l'id dal body della richiesta
+        if (!bookID){
+            return res.status(400).json({message: "ID del libro non fornito"})
+        }
+        if (isNaN(parseInt(bookID))){
+            return res.status(400).json({message: "ID del libro deve esseree un numero o una stringa numerica"})
+        }
+        const result = await database.collection('books').deleteOne({ _id : parseInt(bookID) }); // elimino il libro in base all'id
+
+        //   result è un'istanza di DeleteResult che contiene in seguenti campi
+        //   acknowledged: true,      booleano: indica se il server ha ricevuto e riconosciuto la richiesta
+        //   deletedCount: 1          numero: quanti documenti sono stati effettivamente eliminati
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'Libro non trovato o già eliminato' });
+        }
+        return res.status(200).json({message: 'Libro eliminato con successo'}); // ritorna un messaggio di successo al client
+    } catch(error){
+        console.error(`Internal deleting book`, error);
+        return res.status(500).json({message: 'Internal erroe'});
+    }
+});

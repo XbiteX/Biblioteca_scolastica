@@ -9,7 +9,7 @@
 - [X] aggiungere una pagina per la visualizzazione dei libri prenotati.
     - in qesta pagina gli tenti potranno anche eliminare le prenotazioni a loro nome.
     - l'admin viselizzerà le prenotazioni di tutti gli studenti e potrà eliminare le prenotazioni
-- [ ] aggiungere gli altri campi per la modifica dei libri.
+- [X] aggiungere gli altri campi per la modifica dei libri.
     - quando l'admin vuole modificare un libro si apre un modale con all'interno un form.
     - il form chiede solamente 3 campi
 - [X] aggiustare il reindirizzamento verso app/dashboard:

@@ -217,18 +217,27 @@
       bind:value={titolo}
       on:input={fetchBooks}
       class="w-full sm:w-64 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 basis-1/3"
-    />
-    <Select class="w-full sm:w-48" onchange={toogleTopic}>
-      <option value="">Tutte le categorie</option>
-      <option value="arti e linguaggi">arti e linguaggi</option>
-      <option value="tecnologia">tecnologia</option>
-      <option value="letteratura italiana">letteratura italiana</option>
-      <option value="scienze pure">scienze pure</option>
-      <option value="geografia e storia">geografia e storia</option>
-    </Select>
+    />  
+
+<p class="text-gray-900 dark:text-white">Categoria:</p>
+<Select class="w-full sm:w-48" onchange={toogleTopic}>
+      <option value="" selected>Tutte le categorie</option>
+      <option value="arti e linguaggi">Arti e linguaggi</option>
+      <option value="tecnologia">Tecnologia</option>
+      <option value="letteratura italiana">Letteratura italiana</option>
+      <option value="scienze pure">Scienze pure</option>
+      <option value="geografia e storia">Geografia e storia</option>
+</Select>
+
+<div class="flex items-center gap-2">
+    <span class="text-gray-900 dark:text-white">Ordinamento Alfabetico:</span>
     <Toggle on:change={toogleSortBooks} class="transition-all">
-      Ordina
     </Toggle>
+</div>
+
+
+<p class="text-gray-900 dark:text-white">Filtra:</p>
+
     <Select class="w-full sm:w-48" onchange={selectAvailable}>
       <option value="">Tutti</option>
       <option value={true}>Disponibili</option>

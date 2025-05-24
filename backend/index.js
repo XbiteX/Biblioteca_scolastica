@@ -5,7 +5,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken'); // importo il pacchetto jsonwebtoken
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const {MongoClient} = require('mongodb');
+const {MongoClient, ObjectId} = require('mongodb');
+
  
 const app = express();
 app.use(cors());
@@ -381,22 +382,32 @@ app.delete("/deleteReservation",auth, async (req, res) => {
         return res.status(500).json({message: 'Internal server error'});
     }
     try{
-        const reservationID = req.body.id; // prendo l'id dal body della richiesta
+        const reservationID = new ObjectId(req.body.id); // prendo l'id dal body della richiesta
+
         if (!reservationID){
             return res.status(400).json({message: "ID della prenotazione non fornito"})
         }
-        if (isNaN(parseInt(reservationID))){
-            return res.status(400).json({message: "ID della prenotazione deve essere un numero o una stringa numerica"})
-        }
-        const result = await database.collection('reserveBook').deleteOne({ _id : parseInt(reservationID) }); // elimino la prenotazione in base all'id
+
+        const bookID = await database.collection('reserveBook').findOne({ _id : reservationID }, {projection: { book_id: 1, _id: 0 }});
+        console.log(bookID)
+
+        await database.collection("books").updateOne(
+            { _id: bookID?.book_id },     
+            { $set: {prestabile: true} }        
+        );
+
+        const resultDeletion = await database.collection('reserveBook').deleteOne({ _id : reservationID}); // elimino la prenotazione in base all'id
 
         //   result è un'istanza di DeleteResult che contiene in seguenti campi
         //   acknowledged: true,      booleano: indica se il server ha ricevuto e riconosciuto la richiesta
         //   deletedCount: 1          numero: quanti documenti sono stati effettivamente eliminati
 
-        if (result.deletedCount === 0) {
+        if (resultDeletion.deletedCount === 0) {
             return res.status(404).json({ message: 'prenotazione non trovata o già eliminata' });
         }
+
+
+
         return res.status(200).json({message: 'prenotazione eliminata con successo'}); // ritorna un messaggio di successo al client
     } catch(error){
         console.error(`Internal deleting prenotazione`, error);

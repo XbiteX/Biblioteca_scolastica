@@ -325,7 +325,7 @@ app.post("/reserveBook", auth, async (req,res) => {
         if(!userID) return res.status(400).json({message:"utente non trovato"})
         if(!bookID) return res.status(400).json({message:"libro non trovato"})
 
-        if(bookID === flase) return res.status(400).json({message:"libro non prenotabile / già prenotato"})
+        if(bookID === false) return res.status(400).json({message:"libro non prenotabile / già prenotato"})
         
         const resultCreateReservation = await database.collection("reserveBook").insertOne(reservation); // inserisco la prenotazione nel database
 

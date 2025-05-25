@@ -5,7 +5,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken'); // importo il pacchetto jsonwebtoken
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const {MongoClient, ObjectId} = require('mongodb');
+const {MongoClient, ObjectId, Binary} = require('mongodb');
 
  
 const app = express();
@@ -185,10 +185,10 @@ app.post("/addBook", authAdmin, async (req, res) => {
         });
 
         // **GESTIONE DELL'IMMAGINE**
-        if(book.immagine) {
+        if(book.img) {
             try {
-                // Verifica che sia base64
-                if(!book.immagine.startsWith('data:image/')) {
+                // Verifica che sia un data URL valido (base64)
+                if(!book.img.startsWith('data:image/')) {
                     return res.status(400).json({message: 'Formato immagine non valido. Deve essere base64.'});
                 }
 
@@ -217,11 +217,7 @@ app.post("/addBook", authAdmin, async (req, res) => {
 
                 // Converti in BSON Binary per MongoDB
                 const { Binary } = require('mongodb');
-                book.immagine = {
-                    data: new Binary(imageBuffer), // Dati binari
-                    contentType: mimeType, // Tipo MIME per il recupero
-                    size: imageBuffer.length // Dimensione in bytes
-                };
+                book.img = new Binary(imageBuffer); // Salva direttamente come Binary
 
                 console.log(`Immagine processata: ${mimeType}, ${imageBuffer.length} bytes`);
 
@@ -233,7 +229,7 @@ app.post("/addBook", authAdmin, async (req, res) => {
 
         console.log('Libro da inserire:', {
             ...book,
-            immagine: book.immagine ? `[BINARY DATA - ${book.immagine.size} bytes]` : 'nessuna'
+            img: book.img ? `[BINARY DATA - ${imageBuffer.length} bytes]` : 'nessuna'
         });
 
         // Inserisci il libro nel database
@@ -247,7 +243,7 @@ app.post("/addBook", authAdmin, async (req, res) => {
         return res.status(200).json({
             message: 'Libro aggiunto con successo',
             bookId: result.insertedId,
-            hasImage: !!book.immagine
+            hasImage: !!book.img
         });
 
     } catch(error){

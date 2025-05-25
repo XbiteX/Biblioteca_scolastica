@@ -95,7 +95,7 @@
     const base64Image = canvas.toDataURL('image/jpeg', 0.8);
     
     // Aggiungi l'immagine all'oggetto book
-    book.immagine = base64Image;
+    book.img = base64Image;
     
     // Nascondi il cropper
     showCropper = false;
@@ -117,7 +117,7 @@
   }
 
   function removeImage() {
-    delete book.immagine;
+    delete book.img;
     showCropper = false;
     fileInput.value = '';
     selectedFile = null;
@@ -232,9 +232,9 @@
         />
 
         <!-- Preview dell'immagine salvata -->
-        {#if book.immagine && !showCropper}
+        {#if book.img && !showCropper}
           <div class="relative inline-block">
-            <img src={book.immagine} alt="Copertina" class="w-32 h-auto border rounded shadow" />
+            <img src={book.img} alt="Copertina" class="w-32 h-auto border rounded shadow" />
             <button
               type="button"
               on:click={removeImage}

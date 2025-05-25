@@ -216,7 +216,6 @@ app.post("/addBook", authAdmin, async (req, res) => {
                 }
 
                 // Converti in BSON Binary per MongoDB
-                const { Binary } = require('mongodb');
                 book.img = new Binary(imageBuffer); // Salva direttamente come Binary
 
                 console.log(`Immagine processata: ${mimeType}, ${imageBuffer.length} bytes`);
@@ -226,11 +225,6 @@ app.post("/addBook", authAdmin, async (req, res) => {
                 return res.status(400).json({message: 'Errore nel processamento dell\'immagine.'});
             }
         }
-
-        console.log('Libro da inserire:', {
-            ...book,
-            img: book.img ? `[BINARY DATA - ${imageBuffer.length} bytes]` : 'nessuna'
-        });
 
         // Inserisci il libro nel database
         const result = await database.collection("books").insertOne(book);

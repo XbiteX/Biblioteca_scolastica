@@ -34,32 +34,37 @@ il deployment del [backend](./backend/README.md) è stato fatto con Render al [l
 il deployment del [frontend](./Frontend/README.md) è stato fatto con Vercel al [link](https://biblioteca-scolastica.vercel.app)  
 
 ## Database
+
+il database che abbiamo utilizzato è di tipo NoSQL ed è hostato su [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
+
 ### il database si compone di 3 collection (o tabelle) 
 
 ### users
 
-|isa|password|nome|cognome|ruolo|
-|---|--------|----|-------|-----|
-|12345678|password|marco|rossi|student|
+|nomi colonne|isa|password|nome|cognome|ruolo|
+|-----|---|--------|----|-------|-----|
+|valori di esempio|12345678|password|marco|rossi|student|
+|tipi di dato|Int32|String|String|String|String|
 
-l'attributo ruolo può essere student o admin, l'utente con admin avrà particolari privilegi che sono descritti più avanti
+
+l'attributo ruolo può essere student o admin, l'utente con admin avrà particolari privilegi che sono descritti nel readme del [backend](https://github.com/XbiteX/Biblioteca_scolastica/blob/main/backend/README.md)  
 Le credenziali dell'admin sono
 - isa: 1
 - password: passwordAdmin
 
 ### books
 
-| _id      | argomenti                                               | autore                          | casa_editrice              | cdd      | collocazione        | lingua    | note | prestabile | stato        | titolo                                      |
-|----------|---------------------------------------------------------|---------------------------------|----------------------------|----------|---------------------|----------|------|------------|--------------|---------------------------------------------|
-| 4        | Psicologia, motivazione, produttività, performance, educazione, crescita personale | WELLINGTON, Jean e C.Burleigh  | La Nuova Italia Editrice   | 371.9 BUR | letteratura italiana | italiano |      | TRUE       | Disponibile  | Cattivo Rendimento (Edizione Rivisitata)    |
+|nomi colonne| _id      | argomenti                                               | autore                          | casa_editrice              | cdd      | collocazione        | lingua    | note | prestabile | stato        | titolo                                      |img|
+|------------|----------|---------------------------------------------------------|---------------------------------|----------------------------|----------|---------------------|----------|------|------------|--------------|---------------------------------------------|-----|
+|valori di esempio| 4        | Psicologia, motivazione, produttività, performance, educazione, crescita personale | WELLINGTON, Jean e C.Burleigh  | La Nuova Italia Editrice   | 371.9 BUR | letteratura italiana | italiano |      | true       | Disponibile  | Cattivo Rendimento (Edizione Rivisitata)    |
+|tipi di dato|Int32|String|String|String|String|String|String|String|Boolean|String|String|Binary|
 
+l'attributo img rappresenta l'immagine della copertina di un dato libro, abbiamo utilizzato il tipo di dato [BSON](https://www.mongodb.com/docs/manual/reference/bson-types/) per memorizzarlo.  
 
 ### reserveBook
 
-| _id                        | data_inizio | data_fine   | user_isa | book_id |
-|----------------------------|-------------|-------------|----------|---------|
-| 682b0c0517e5a39aeeb0c502    | data inizio | data fine   | 3        | 29      |
+|nomi colonne| _id                        | data_inizio | data_fine   | user_isa | book_id |
+|-----|----------------------------|-------------|-------------|----------|---------|
+|valori di esempio| 682b0c0517e5a39aeeb0c502    | data inizio | data fine   | 3        | 29      |
+|tipi di dato|ObjectId|date|date|Int32|Int32|
 
-
-
-## frontend:

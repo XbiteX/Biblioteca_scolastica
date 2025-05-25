@@ -29,13 +29,14 @@
 >
   <Card class="shadow hover:shadow-xl border-0 flex flex-col min-h-[300px] bg-gray-200 h-full dark:bg-stone-800">
     <!-- Contenitore immagine con dimensioni fisse -->
-    <div class="w-full h-64 overflow-hidden">
+    <div class="w-full aspect-[3/8] overflow-hidden">
       <img src={img ? img : "/images/placeholderLibri.webp"} alt={titolo} class="w-full h-full object-cover" />
     </div>
+
     <div class="m-6 flex flex-col h-full">
       <!-- Testo del libro -->
       <div class="flex-grow">
-        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white line-clamp-2">
           {titolo}
         </h5>
         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">

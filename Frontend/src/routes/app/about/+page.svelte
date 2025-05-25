@@ -8,74 +8,74 @@
   let ruolo = null;
   let mounted = false;
 
-  // Dati delle librerie per piano
+  // Dati delle librerie per piano - sezioni tecniche ITIS
   const libraryRooms = {
     primo: [
       {
         id: "156-159",
-        name: "Biblioteca Principale",
-        description: "Collezione generale e sala lettura principale",
-        subjects: ["Letteratura italiana", "Storia", "Geografia"],
+        name: "Biblioteca Tecnica Generale",
+        description: "Manuali tecnici generali, normative e collezione principale",
+        subjects: ["Normative tecniche", "Sicurezza sul lavoro", "Disegno tecnico"],
         position: { x: 580, y: 350 },
         color: "green"
       },
       {
-        id: "capitolium",
-        name: "Sezione Capitolium",
-        description: "Testi storici e documenti antichi",
-        subjects: ["Storia antica", "Archeologia"],
+        id: "informatica",
+        name: "Sezione Informatica",
+        description: "Manuali di programmazione, linguaggi e tecnologie digitali",
+        subjects: ["Programmazione", "Database", "Reti informatiche", "Cybersecurity"],
         position: { x: 380, y: 460 },
         color: "blue"
       },
       {
-        id: "giuseppe-mercalli",
-        name: "Sezione Giuseppe Mercalli",
-        description: "Scienze della Terra e Geografia",
-        subjects: ["Geologia", "Geografia fisica"],
+        id: "meccanica",
+        name: "Sezione Meccanica",
+        description: "Meccanica industriale, macchine utensili e tecnologie produttive",
+        subjects: ["Meccanica applicata", "Macchine utensili", "Tecnologie meccaniche"],
         position: { x: 380, y: 480 },
         color: "blue"
       }
     ],
     rialzato: [
       {
-        id: "informatica",
-        name: "Biblioteca di Informatica",
-        description: "Manuali tecnici e risorse digitali",
-        subjects: ["Informatica", "Programmazione", "Tecnologia"],
+        id: "automazione",
+        name: "Sezione Automazione",
+        description: "Controlli automatici, PLC e sistemi di automazione industriale",
+        subjects: ["PLC", "Controlli automatici", "Robotica industriale", "Domotica"],
         position: { x: 1050, y: 300 },
         color: "yellow"
       },
       {
-        id: "officina-mecchine",
-        name: "Biblioteca Tecnica",
-        description: "Manuali e schemi tecnici",
-        subjects: ["Meccanica", "Ingegneria"],
+        id: "elettronica",
+        name: "Sezione Elettronica",
+        description: "Elettronica analogica, digitale e sistemi embedded",
+        subjects: ["Elettronica analogica", "Elettronica digitale", "Microcontrollori", "IoT"],
         position: { x: 760, y: 280 },
         color: "yellow"
       }
     ],
     secondo: [
       {
-        id: "rosetta-1-2",
-        name: "Sezione Rosetta",
-        description: "Letteratura classica e moderna",
-        subjects: ["Letteratura", "Filologia", "Lingue classiche"],
+        id: "chimica",
+        name: "Sezione Chimica Industriale",
+        description: "Chimica analitica, processi industriali e tecnologie chimiche",
+        subjects: ["Chimica analitica", "Processi industriali", "Tecnologie chimiche"],
         position: { x: 890, y: 220 },
         color: "green"
       },
       {
-        id: "madame-curie",
-        name: "Sezione Madame Curie",
-        description: "Scienze chimiche e fisiche",
-        subjects: ["Chimica", "Fisica", "Scienze pure"],
+        id: "laboratori",
+        name: "Sezione Laboratori",
+        description: "Manuali di laboratorio e procedure sperimentali",
+        subjects: ["Procedure laboratorio", "Strumentazione", "Misure e collaudi"],
         position: { x: 720, y: 320 },
         color: "green"
       },
       {
-        id: "galileo-galilei",
-        name: "Sezione Galileo Galilei",
-        description: "Matematica e Astronomia",
-        subjects: ["Matematica", "Astronomia", "Fisica"],
+        id: "progetti",
+        name: "Sezione Progetti Tecnici",
+        description: "Tesi, progetti di diploma e documentazione tecnica specialistica",
+        subjects: ["Progetti di diploma", "Documentazione tecnica", "Brevetti"],
         position: { x: 1020, y: 500 },
         color: "blue"
       }
@@ -85,15 +85,15 @@
   const floorInfo = {
     primo: {
       title: "Piano Primo",
-      description: "Piano principale con la biblioteca centrale e le sezioni storiche"
+      description: "Sezioni principali con biblioteca tecnica generale, informatica e meccanica"
     },
     rialzato: {
       title: "Piano Rialzato", 
-      description: "Sezioni tecniche e informatiche"
+      description: "Sezioni specializzate in automazione ed elettronica"
     },
     secondo: {
       title: "Piano Secondo",
-      description: "Sezioni scientifiche e letterarie specializzate"
+      description: "Sezioni avanzate per chimica industriale, laboratori e progetti tecnici"
     }
   };
 
@@ -127,8 +127,8 @@
 </script>
 
 <svelte:head>
-  <title>Biblioteca IIS Castelli - About</title>
-  <meta name="description" content="Scopri la biblioteca dell'IIS Castelli con le sue sezioni specializzate distribuite su tre piani" />
+  <title>Biblioteca ITIS Castelli - About</title>
+  <meta name="description" content="Scopri la biblioteca tecnica dell'ITIS Castelli con le sue sezioni specializzate per informatica, meccanica, automazione, elettronica e chimica" />
 </svelte:head>
 
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -137,10 +137,10 @@
     <div class="max-w-7xl mx-auto px-4 py-16">
       <div class="text-center">
         <h1 class="text-4xl md:text-6xl font-bold mb-4">
-          Biblioteca IIS Castelli
+          Biblioteca ITIS Castelli
         </h1>
         <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
-          Un centro di conoscenza e apprendimento al servizio della comunità scolastica
+          Centro di documentazione tecnica e scientifica per l'innovazione tecnologica
         </p>
       </div>
     </div>
@@ -156,15 +156,16 @@
         </h2>
         <div class="prose prose-lg dark:prose-invert">
           <p class="text-gray-600 dark:text-gray-300 mb-4">
-            La Biblioteca dell'Istituto di Istruzione Superiore Castelli rappresenta il cuore pulsante 
-            della vita culturale e didattica del nostro istituto. Situata su tre piani dell'edificio 
-            scolastico, offre una vasta collezione di risorse per supportare l'apprendimento e la 
-            ricerca degli studenti e del corpo docente.
+            La Biblioteca dell'Istituto Tecnico Industriale Statale Castelli rappresenta un punto 
+            di riferimento fondamentale per la formazione tecnica e scientifica. Con le sue 
+            collezioni specializzate distribuite su tre piani, supporta l'apprendimento pratico 
+            e teorico nei settori dell'innovazione tecnologica e industriale.
           </p>
           <p class="text-gray-600 dark:text-gray-300">
-            Con oltre 15.000 volumi distribuiti in sezioni specializzate, la nostra biblioteca 
-            copre tutte le discipline curricolari, dalle materie umanistiche a quelle scientifiche 
-            e tecniche, garantendo un supporto completo al percorso formativo.
+            La nostra biblioteca è organizzata per rispondere alle esigenze formative dei corsi di 
+            <strong>Informatica</strong>, <strong>Meccanica</strong>, <strong>Automazione</strong>, 
+            <strong>Elettronica</strong> e <strong>Chimica</strong>, offrendo una vasta gamma di 
+            risorse tecniche aggiornate e strumenti per la ricerca applicata.
           </p>
         </div>
       </div>
@@ -172,20 +173,20 @@
       <!-- Statistiche -->
       <div class="grid grid-cols-2 gap-6">
         <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg shadow-md">
-          <div class="text-3xl font-bold text-blue-600 dark:text-blue-300 mb-2">15.000+</div>
-          <div class="text-gray-600 dark:text-gray-300">Volumi disponibili</div>
+          <div class="text-3xl font-bold text-blue-600 dark:text-blue-300 mb-2">500+</div>
+          <div class="text-gray-600 dark:text-gray-300">Manuali tecnici</div>
         </div>
         <div class="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg shadow-md">
-          <div class="text-3xl font-bold text-green-600 dark:text-green-300 mb-2">7</div>
+          <div class="text-3xl font-bold text-green-600 dark:text-green-300 mb-2">8</div>
           <div class="text-gray-600 dark:text-gray-300">Sezioni specializzate</div>
         </div>
         <div class="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-lg shadow-md">
-          <div class="text-3xl font-bold text-purple-600 dark:text-purple-300 mb-2">3</div>
-          <div class="text-gray-600 dark:text-gray-300">Piani della biblioteca</div>
+          <div class="text-3xl font-bold text-purple-600 dark:text-purple-300 mb-2">5</div>
+          <div class="text-gray-600 dark:text-gray-300">Specializzazioni tecniche</div>
         </div>
         <div class="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 rounded-lg shadow-md">
-          <div class="text-3xl font-bold text-orange-600 dark:text-orange-300 mb-2">50+</div>
-          <div class="text-gray-600 dark:text-gray-300">Posti lettura</div>
+          <div class="text-3xl font-bold text-orange-600 dark:text-orange-300 mb-2">60+</div>
+          <div class="text-gray-600 dark:text-gray-300">Postazioni studio</div>
         </div>
       </div>
     </div>
@@ -193,21 +194,21 @@
     <!-- Sezioni della Biblioteca -->
     <div class="mb-16">
       <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">
-        Le Nostre Sezioni
+        Le Nostre Specializzazioni
       </h2>
       <div class="grid md:grid-cols-3 gap-8">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
           <div class="flex items-center mb-4">
             <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-4">
               <svg class="w-6 h-6 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Letteratura e Umanesimo</h3>
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Informatica & Digitale</h3>
           </div>
           <p class="text-gray-600 dark:text-gray-300">
-            Sezioni dedicate alla letteratura italiana, storia e geografia con una ricca collezione 
-            di classici e opere moderne.
+            Manuali di programmazione, tecnologie web, database, cybersecurity e sistemi informatici 
+            per la formazione digitale completa.
           </p>
         </div>
 
@@ -215,14 +216,15 @@
           <div class="flex items-center mb-4">
             <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-4">
               <svg class="w-6 h-6 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Scienze e Tecnologia</h3>
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Meccanica & Automazione</h3>
           </div>
           <p class="text-gray-600 dark:text-gray-300">
-            Sezioni Madame Curie e Galileo Galilei con testi scientifici, manuali tecnici 
-            e risorse per l'informatica.
+            Tecnologie meccaniche, macchine utensili, PLC, controlli automatici e robotica 
+            industriale per l'industria 4.0.
           </p>
         </div>
 
@@ -230,14 +232,14 @@
           <div class="flex items-center mb-4">
             <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-4">
               <svg class="w-6 h-6 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Archivi Storici</h3>
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Elettronica & Chimica</h3>
           </div>
           <p class="text-gray-600 dark:text-gray-300">
-            Sezione Capitolium con documenti storici, testi antichi e materiali di valore 
-            storico-culturale per la ricerca.
+            Elettronica analogica e digitale, microcontrollori, IoT, processi industriali 
+            chimici e tecnologie analitiche.
           </p>
         </div>
       </div>
@@ -247,7 +249,7 @@
     {#if mounted}
     <div class="mb-16">
       <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">
-        Mappa della Biblioteca
+        Mappa della Biblioteca Tecnica
       </h2>
       
       <!-- Selezione Piano -->
@@ -364,7 +366,7 @@
             {selectedRoom.description}
           </p>
           <div class="mb-4">
-            <h4 class="font-semibold text-gray-800 dark:text-white mb-2">Materie disponibili:</h4>
+            <h4 class="font-semibold text-gray-800 dark:text-white mb-2">Settori tecnici disponibili:</h4>
             <div class="flex flex-wrap gap-2">
               {#each selectedRoom.subjects as subject}
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
@@ -378,7 +380,7 @@
               class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
               on:click={handleCatalogClick}
             >
-              Esplora Catalogo
+              Esplora Catalogo Tecnico
             </button>
             <button
               class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
@@ -423,20 +425,20 @@
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
             </svg>
-            <span>biblioteca@iiscastelli.edu.it</span>
+            <span>biblioteca@itiscastelli.edu.it</span>
           </div>
           <div class="flex items-center">
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
             </svg>
-            <span>+39 02 1234567</span>
+            <span>+39 030 3384711</span>
           </div>
           <div class="flex items-center">
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
-            <span>Via Esempio 123, Milano</span>
+            <span>Via Antonio Cantore 9, Brescia</span>
           </div>
         </div>
       </div>

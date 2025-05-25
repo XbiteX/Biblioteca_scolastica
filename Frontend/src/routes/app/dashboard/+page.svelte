@@ -58,7 +58,7 @@
     if (prestabile !== undefined && prestabile !== "") params.append("prestabile", prestabile);
 
     const url = `https://bookstoreonline.onrender.com/books?${params.toString()}`;
-    
+    console.log("Fetching books from:", url);
     try {
       const res = await fetch(url, {
         headers: {
@@ -97,6 +97,7 @@
   
   async function selectAvailable(e) {
     prestabile = e.target.value === "" ? undefined : e.target.value === "true" ? true : false;
+    console.log("Prestabile:", prestabile);
     await fetchBooks();
   }
   

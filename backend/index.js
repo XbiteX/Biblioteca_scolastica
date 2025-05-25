@@ -100,7 +100,7 @@ app.get("/books", auth, async (req, res) => {
         const lingua = req.query.lingua;
         const stato = req.query.stato;
         const collocazione = req.query.collocazione;
-        const prestabile = req.query.prestabile;
+        const prestabile = req.query.prestabile === 'true'; // Converti la stringa 'true' in booleano
         const ordinamento = req.query.ordinamento;
 
         const filter = {};

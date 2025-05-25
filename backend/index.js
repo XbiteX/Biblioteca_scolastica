@@ -147,54 +147,115 @@ app.get("/books", auth, async (req, res) => {
 
 
 //rotta per aggiungere un libro, solo l'admin lo può fare
-app.post("/addBook",authAdmin, async (req, res) => {
+app.post("/addBook", authAdmin, async (req, res) => {
     if(!database) {
         return res.status(500).json({message: 'Internal server error'});
     }
+    
     try{
         let book = req.body; // prendo il libro dal body della richiesta
+        
         if(!book || typeof book !== 'object' || Object.keys(book).length === 0) {
             return res.status(400).json({message: 'Oggetto libro non valido o vuoto'});
         }
 
-        const fields = ["cdd", "note", "prestabile", "stato", "argomenti"]; // array con i campi del libro non obbligatori
-
-        fields.forEach(element => {
-            if(book[element] === undefined) {
-                book[element] = ""; // se il campo non è definito lo setto a null
-            }
-        });
-
-        console.log(book); // logga il libro per vedere cosa contiene
-
+        // Validazione dei campi obbligatori
         if(!book._id){
             return res.status(400).json({message: "ID del libro non fornito"})
         }
-         if(!book.collocazione){
+        if(!book.collocazione){
             return res.status(400).json({message: "collocazione non fornita"})
         }
-         if(!book.autore){
-            return res.status(400).json({message: "autore del libro non fornto"})
+        if(!book.autore){
+            return res.status(400).json({message: "autore del libro non fornito"})
         }
-         if(!book.titolo){
+        if(!book.titolo){
             return res.status(400).json({message: "titolo del libro non fornito"})
         }
-         if(!book.lingua){
+        if(!book.lingua){
             return res.status(400).json({message: "lingua del libro non fornito"})
         }
 
-        const result = await database.collection("books").insertOne(book); // inserisco il libro nel database
+        // Gestione dei campi opzionali
+        const fields = ["cdd", "note", "prestabile", "stato", "argomenti"];
+        fields.forEach(element => {
+            if(book[element] === undefined) {
+                book[element] = ""; // se il campo non è definito lo setto a stringa vuota
+            }
+        });
+
+        // **GESTIONE DELL'IMMAGINE**
+        if(book.immagine) {
+            try {
+                // Verifica che sia base64
+                if(!book.immagine.startsWith('data:image/')) {
+                    return res.status(400).json({message: 'Formato immagine non valido. Deve essere base64.'});
+                }
+
+                // Estrai il tipo MIME e i dati base64
+                const matches = book.immagine.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                if(!matches || matches.length !== 3) {
+                    return res.status(400).json({message: 'Formato base64 non valido.'});
+                }
+
+                const mimeType = matches[1]; // es. "image/jpeg"
+                const base64Data = matches[2]; // dati base64 puri
+
+                // Verifica che sia effettivamente un'immagine
+                if(!mimeType.startsWith('image/')) {
+                    return res.status(400).json({message: 'Il file deve essere un\'immagine.'});
+                }
+
+                // Converti base64 in Buffer
+                const imageBuffer = Buffer.from(base64Data, 'base64');
+
+                // Verifica dimensione dell'immagine (es. max 5MB)
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                if(imageBuffer.length > maxSize) {
+                    return res.status(400).json({message: 'Immagine troppo grande. Massimo 5MB.'});
+                }
+
+                // Converti in BSON Binary per MongoDB
+                const { Binary } = require('mongodb');
+                book.immagine = {
+                    data: new Binary(imageBuffer), // Dati binari
+                    contentType: mimeType, // Tipo MIME per il recupero
+                    size: imageBuffer.length // Dimensione in bytes
+                };
+
+                console.log(`Immagine processata: ${mimeType}, ${imageBuffer.length} bytes`);
+
+            } catch(imageError) {
+                console.error('Errore processing immagine:', imageError);
+                return res.status(400).json({message: 'Errore nel processamento dell\'immagine.'});
+            }
+        }
+
+        console.log('Libro da inserire:', {
+            ...book,
+            immagine: book.immagine ? `[BINARY DATA - ${book.immagine.size} bytes]` : 'nessuna'
+        });
+
+        // Inserisci il libro nel database
+        const result = await database.collection("books").insertOne(book);
 
         if(result.acknowledged === false) {
             return res.status(500).json({message: 'Errore durante l\'inserimento del libro'});
         }
-        return res.status(200).json({message: 'tt ok'}); // ritorna un messaggio di successo al client
+
+        console.log(`Libro inserito con successo. ID: ${result.insertedId}`);
+        return res.status(200).json({
+            message: 'Libro aggiunto con successo',
+            bookId: result.insertedId,
+            hasImage: !!book.immagine
+        });
+
     } catch(error){
         if (error.code === 11000) { // l'errore 11000 indica che l'id è già presente nel database
             return res.status(409).json({ message: 'ID già esistente nel database' });
         }
-        console.error(`Internal adding book`, error);
-        return res.status(500).json({message: 'Internal error'});
+        console.error(`Errore durante l'aggiunta del libro:`, error);
+        return res.status(500).json({message: 'Errore interno del server'});
     }
 });
 

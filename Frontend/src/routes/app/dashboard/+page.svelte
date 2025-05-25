@@ -96,7 +96,7 @@
   }
   
   async function selectAvailable(e) {
-    prestabile = e.target.value === "" ? undefined : e.target.value === "true";
+    prestabile = e.target.value === "" ? undefined : e.target.value === "true" ? true : false;
     await fetchBooks();
   }
   
@@ -317,7 +317,7 @@
   <!-- Griglia dei Libri -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4 w-full max-w-7xl">
     {#each books as book}
-      <div class="bg-red-300">
+      <div>
         <BookCard
           {...book}
           isAdmin={ruolo === "admin"}

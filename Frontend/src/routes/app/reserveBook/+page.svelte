@@ -213,15 +213,4 @@
     </div>
   {/if}
 
-  <!-- Bottone torna alla dashboard -->
-  <div class="w-full max-w-7xl p-4">
-    <div class="flex justify-center">
-      <Button 
-        color="alternative" 
-        on:click={() => window.location.href = "/app/dashboard"}
-      >
-        Torna alla Dashboard
-      </Button>
-    </div>
-  </div>
 </div>

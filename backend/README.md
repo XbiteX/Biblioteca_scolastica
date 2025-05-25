@@ -169,7 +169,19 @@ ritorna tutte le prenotazioni
 se l'utente non è un admin:
 ritorna le proprie prenotazioni 
 
-da notare che il client deve passare solo il token, poi si vedrà nel payload del token se l'utente è l'admin oppure uno studente normale
+da notare che il client deve passare solo il token, poi si vedrà nel payload del token se l'utente è l'admin oppure uno studente normale.
+per la cronaca: sappiamo che non è buona usanza mettere il nome del metodo nell'URL della richiesta, tuttavia lo lasciamo perchè si :)
+
+## /deleteReservation
+-> permessi admin: dipende dai casi (leggi sotto) 
+-> metodo: **DELETE**  
+-> rotta: **https://bookstoreonline.onrender.com/deleteReservation**  
+-> body: SI  
+-> autenticazione: **richiesta** 
+
+questa rotta permette di eliminare una (o più) prenotazione/i, lo stuendente avrà modo di eliminare le prenotazioni a suo nome mentre l'admin potrà eliminare le prenotazioni di chiunque
+
+
 
 
 

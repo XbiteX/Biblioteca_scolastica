@@ -193,7 +193,7 @@ app.post("/addBook", authAdmin, async (req, res) => {
                 }
 
                 // Estrai il tipo MIME e i dati base64
-                const matches = book.immagine.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                const matches = book.img.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
                 if(!matches || matches.length !== 3) {
                     return res.status(400).json({message: 'Formato base64 non valido.'});
                 }

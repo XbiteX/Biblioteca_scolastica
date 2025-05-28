@@ -18,7 +18,7 @@
     - per farlo bisogna fare una richista qualsiasi verso il server.
     - se il server risopnde con messaggio 401, "token non valido" allora il token in localstorage non è valido
     - se ciò accade il frontend rimanda l'utente sulla pagina di login.
-- [ ] abbellire la pagina di login
+- [X] abbellire la pagina di login
     - aggiungere stili con tailwind
 - [X] convertire tutti i tag <button>, <input>, <label> con componenti flowbite.
 
